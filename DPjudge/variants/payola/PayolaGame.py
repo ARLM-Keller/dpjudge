@@ -49,12 +49,12 @@ class PayolaGame(Game):
 				self.plateau[offer.power] += offer.plateau
 		#	------------------------------------------------------------------
 		def format(self, power = 0, blind = 0, hide = 0):
-			if power: flag, amt = ' ', self.cost.get(power, 0)
+			if power: flag, self.amt = ' ', self.cost.get(power, 0)
 			else:
 				pay = self.power.fullAccept.index(self.power.abbrev)
 				flag = ' *'[self.seqs[pay] is None and not hide]
-				amt = self.total
-			return ' %s %3d : %s %s\n' % (flag, amt, self.unit,
+				self.amt = self.total
+			return ' %s %3d : %s %s\n' % (flag, self.amt, self.unit,
 				blind and ('%s(%s)' % ((' ' * 9)[len(self.unit):],
 				self.power.game.map.ownWord[self.power.name])) or self.order)
 	#	----------------------------------------------------------------------
@@ -639,6 +639,7 @@ class PayolaGame(Game):
 		if mailTo: self.mail.write(
 			'OFFICIAL Payola bribe results %s %.1s%s%.1s\n' %
 			tuple([self.name] + self.phase.split()), 0)
+		blind = 'BLIND' in self.rules
 		for power in self.powers:
 			if not power.offers and (not power.balance
 			or power.isDummy() and not power.ceo): continue
@@ -669,12 +670,12 @@ class PayolaGame(Game):
 			elif 'HIDE_OFFERS' not in self.rules:
 				status = 1
 				for key in [x for x in self.orders.values() if power in x.cost]:
-					off = key.format(power, 'BLIND' in self.rules)
-					if off[0] == '0':
+					off = key.format(power, blind)
+					if not key.amt:
 						if self.unitOwner(key.unit) == power:
 							if 'PAY_DUMMIES' in self.rules: continue
-						elif ('BLIND' in self.rules
-						and 'ZERO_FOREIGN' not in self.rules): continue
+						elif blind and 'ZERO_FOREIGN' not in self.rules:
+							continue
 					self.mail.write('YOUR ACCEPTED BRIBES WERE:\n' * status +
 						off)
 					status = 0
@@ -682,7 +683,7 @@ class PayolaGame(Game):
 					self.mail.write('NONE OF YOUR BRIBES WERE ACCEPTED\n')
 				self.mail.write('YOUR OFFER SHEET WAS:\n')
 				for offer in power.sheet:
-					if 'PAY_DUMMIES' in self.rules and offer.startswith('0'):
+					if 'PAY_DUMMIES' in self.rules and offer[:1] == '0':
 						continue
 					self.mail.write(
 						'%*s%s\n' % (6 - offer.find(' '), '', offer))
@@ -690,9 +691,7 @@ class PayolaGame(Game):
 				'THE PREVIOUS BALANCE OF YOUR BANK ACCOUNT WAS:%7d AgP\n' %
 					power.balance)
 				if power.overpaid: self.mail.write(
-#				'TO AVOID OVERDRAFT, YOUR OFFERS WERE REDUCED BY:%5d AgP EACH\n'
 				'EACH OFFER WAS SUBJECT TO BRIBE REDUCTION RULES %5d TIME%s\n'
-#				'(TO AVOID OVERDRAFT)\n'
 					% (power.overpaid, 'S'[power.overpaid < 2:]))
 				self.mail.write(
 				'TOTAL COST TO YOU OF THE BRIBES YOU OFFERED WAS:%5d AgP\n' %
