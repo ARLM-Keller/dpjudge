@@ -81,29 +81,35 @@ class Game:
 			and (self.unitOwner('AF'[army] + ' ' + thru[army], not army)
 			or 'FICTIONAL_OK' in self.rules))
 	#	---------------------------------------------------------------------
-	def canConvoy(self, mover, unit, start, end, supporter = None):
-		army, pools, check = unit != 'F', [supporter], self.map.abutList(start)
-		if mover in check: check = [mover]
+	def canConvoy(self, unit, start, end, via = 0, helper = 0):
+		army, pools, check = unit != 'F', [helper], self.map.abutList(start)
+		if via in check: check = [via]
 		for loc in [x.upper() for x in check if not (army and x.islower())]:
 			if loc in pools: continue
 			thru = loc[:3], loc
+			if helper and thru[not army] in (end, end[:3]): return 1
 			if not self.convoyer(army, thru): continue
 			pool, size, can = [thru[army]], 0, 0
 			while size < len(pool):
 				for next in self.map.abutList(pool[size]):
 					if not army: next = next[:3]
 					elif next.islower(): continue
-					if next in pools + pool: continue
 					next = next.upper()
 					thru = next[:3], next
+					if thru[army] in pools + pool: continue
 					can |= thru[not army] in (end, end[:3])
-					if can and (not mover or mover in pool): return 1
+					if can and (not via or via in pool
+					and 'NO_RETURN' not in self.rules): return 1
 					if self.convoyer(army, thru): pool += [thru[army]]
 				size += 1
-			if mover in pool: return
+			if via in pool:
+				for omit in can * pool:
+					if not (self.canConvoy(unit, via, start, 0, omit)
+					or self.canConvoy(unit, via, end, 0, omit)): return
+				return can
 			pools += pool
 		return (unit == '?' and 'PORTAGE_CONVOY' in self.rules
-			and self.canConvoy(mover, 'F', start, end, supporter))
+			and self.canConvoy('F', start, end, via, helper))
 	#	---------------------------------------------------------------------
 	def validOrder(self, power, unit, order, report = 1):
 		"""
@@ -218,7 +224,7 @@ class Game:
 							'BAD CONVOY DESTINATION: %s ' % unit + order)
 				elif (not self.abuts(word[1], word[2], orderType, dest)
 				and	 (rcvr[0] == 'F' and 'PORTAGE_CONVOY' not in rules
-				or not self.canConvoy(0, word[1], word[2][:3], dest, unitLoc))):
+				or not self.canConvoy(word[1], word[2][:3], dest, 0, unitLoc))):
 					return error.append(
 						'SUPPORTED UNIT CANNOT REACH DESTINATION: %s ' %
 						unit + order)
@@ -257,7 +263,7 @@ class Game:
 			#	-----------------------------------------------------
 			#	...or that the fleet can perform the described convoy
 			#	-----------------------------------------------------
-			elif not self.canConvoy(unitLoc, rcvr[0], rcvr[2:5], dest):
+			elif not self.canConvoy(rcvr[0], rcvr[2:5], dest, unitLoc):
 				return error.append(
 					'IMPOSSIBLE CONVOY ORDER: %s ' % unit + order)
 			#	-----------------------------------------------------
@@ -281,14 +287,15 @@ class Game:
 			and ('PORTAGE_CONVOY' not in rules
 			or map.areatype(unitLoc) not in ('COAST', 'PORT'))):
 				return error.append('UNIT CANNOT CONVOY: %s ' % unit + order)
-			#	-----------------------------
-			#	Step through every "- xxx" in
-			#	the order and ensure the unit
-			#	can get there at every step.
-			#	-----------------------------
+			#	-------------------------------------------
+			#	Step through every "- xxx" in the order and
+			#	ensure the unit can get there at every step
+			#	-------------------------------------------
 			src, orderType, visit = unitLoc, 'C-'[len(word) == 2], []
-			if word[-1] == unitLoc: return error.append(
-				'UNIT MAY ONLY MOVE TO NEW LOCATION: %s ' % unit + order)
+			if (word[-1] == unitLoc
+			and (orderType < 'C' or 'NO_RETURN' in self.rules)):
+				return error.append('MOVING UNIT MAY NOT RETURN: %s ' %
+					unit + order)
 			if orderType == 'C':
 				if map.areatype(word[-1]) not in ('COAST', 'PORT'):
 					return error.append(
@@ -1146,24 +1153,19 @@ class Game:
 		#	---------------------------------------------------------
 		#	Make a .pdf file with the final page(s) from the .ps file
 		#	---------------------------------------------------------
-		fileName = host.dpjudgeDir + '/maps/' + self.name + password
+		fileName, params = host.dpjudgeDir + '/maps/' + self.name + password, []
 		infileName, outfileName = fileName + '_.pdf', fileName + '.pdf'
-		params = []
-		if self.map.pagesize:
-			params += '-sPAGESIZE=' + self.map.pagesize
+		if self.map.pagesize: params = ['-sPAPERSIZE=' + self.map.pagesize]
 		#	----------------------------------------
 		#	Add more parameters before this comment.
 		#	----------------------------------------
-		if os.name == 'nt':
-			params = map(lambda x: '"' + x + '"', params)
-		params = ' '.join(params)
-		if params: params += ' '
+		if os.name == 'nt': params = ['"%s"' % x for x in params]
+		params = ' '.join(params) + ' %s.ps ' % fileName + infileName
 		#	-----------------------------------------------------------------
 		#	(We could run psselect -_2-_1 xx.ps 2>/dev/null > tmp.ps and then
 		#	run the ps2pdf on the tmp.ps file, but we now pdf the full game.)
 		#	-----------------------------------------------------------------
-		os.system(host.packageDir + '/tools/ps2pdf ' + params + fileName + '.ps ' +
-			infileName)
+		os.system(host.packageDir + '/tools/ps2pdf ' + params)
 		os.chmod(infileName, 0666)
 		#	-------------------------------------------------
 		#	But now we have to rotate it 90 degrees clockwise
