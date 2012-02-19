@@ -1,0 +1,50 @@
+# Format: 
+#  variant bbox=None papersize=letter rotation=3
+# Use the '_' placeholder to select a default value before the end of the line.
+# Use the '-' placeholder to copy the value of the preceding variant.
+# Use the '=' placeholder to copy all remaining values of the preceding variant.
+
+# Standard
+standard 21,22,584,518
+
+# Standard map variants 
+brazilian 21,22,584,518
+britain 21,22,584,518
+chaos 21,20,584,508
+milan 21,22,584,518
+minorpower 20,22,571,506
+renaissance 21,22,584,518
+crowded 21,22,550,486
+fiveman 21,22,584,518
+v8 21,22,579,510
+void 21,20,584,508
+
+# Expansions to the standard map
+loeb9 17,16,587,516
+youngstown 15,31,524,480 A4
+
+# Europe
+1900 27,28,555,523
+aberration 19,20,622,490
+ancmed 21,50,584,474
+ambition 30,22,539,478
+classical 17,75,583,461
+hundred 21,24,396,528
+modern 72,41,573,524
+
+# Asia
+canton 21,22,584,454
+sengoku 21,22,574,502
+
+# America
+empire 12,272,461,756 _ 0
+
+# World
+imperial 10,12,1179,607
+zeus 20,22,537,520
+
+# Uncategorized
+# Imaginary
+chromatic 42,28,545,530
+pure 16,119,498,517
+sailho 21,24,490,480
