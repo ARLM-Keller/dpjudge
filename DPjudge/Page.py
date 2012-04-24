@@ -6,13 +6,6 @@ from Map import Map
 class Page:
 	#	----------------------------------------------------------------------
 	def __init__(self, form = {}):
-		#	Add banner message if one is provided.
-		#	NOTE: if testing a new DPPD, though, you don't want this text to
-		#	show, at least for the "page=whois" poor-man's Web Service
-		#	invocations because this header will be included in that response,
-		#	and bin/mail.py will be confused about a JOIN (etc.)'ing player's
-		#	DPPD status.
-		print host.bannerHtml
 		#	The pwdFlag is 0 or None if bad password, 1 if good (incl. GM),
 		#	and 2 if good enough to provide read-only access (omniscient).
 		self.pwdFlag = None
@@ -20,9 +13,16 @@ class Page:
 		for key in form.keys():
 			if type(form) is dict or type(form[key]) != list:
 				vars(self)[key] = unicode(form.get(key), 'latin-1')
-			else: vars(self)[key] = [unicode(x.value, 'latin-1')
-				for x in form[key]]
+			else: vars(self)[key] = unicode(form[key][0].value, 'latin-1')
 		self.wireless = 'UPG1' in os.environ.get('HTTP_USER_AGENT', '')
+		#	Add banner message if one is provided.
+		#	NOTE: if testing a new DPPD, though, you don't want this text to
+		#	show, at least for the "page=whois" poor-man's Web Service
+		#	invocations because this header will be included in that response,
+		#	and bin/mail.py will be confused about a JOIN (etc.)'ing player's
+		#	DPPD status.
+		if not self.page or self.page[0].lower() != self.page[0]:
+			print host.bannerHtml
 		if self.game:
 			game = self.game.lower().replace('%23', '#')
 			self.game = Status().load(game)
@@ -86,8 +86,9 @@ class Page:
 						  .replace('<WEB>',		host.dpjudgeDir)
 						  .replace('<ID>',		host.dpjudgeID)
 						  .replace('<MAIL>',	host.dpjudge)
+						  .replace('<KEEPER>',	host.judgekeeper)
 						  .replace('<PKG>',		host.packageDir)
-						  .replace('<DPPD>',	host.dppdURL)
+						  .replace('<DPPD>',	host.dppdURL or '')
 						  .replace('<POUCH>',	'http://www.diplom.org'))
 			inCode = not inCode
 			if inCode: self.write(stuff)
