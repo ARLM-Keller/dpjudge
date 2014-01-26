@@ -1,0 +1,1734 @@
+%!PS-Adobe-3.0
+%%Title: Diplomacy Map (Sail Ho!)
+%%Creator: dpmap, using a map created with DPeye by Mario Huys (woelpad@yahoo.com)
+%%DocumentPaperSizes: Letter
+%%LanguageLevel: 2
+%%Orientation: Landscape
+%%Pages: (atend)
+%%DocumentNeededResources: font Helvetica-Bold Courier Courier-Bold Times-Roman
+%%EndComments
+
+%%BeginDefaults
+%%PageResources: font Helvetica-Bold Courier Courier-Bold Times-Roman
+%%EndDefaults
+
+% INFO
+%  378  568 AEO    Village of Aeolus
+%  208  508 ALC    Alcmene's Village
+%  498  438 AMA    Amazon Village
+%  398  428 APH    Aphrodite's Beach
+%  513  308 ARE    Palace of Ares
+%  453  218 ARG    Argo's Pasture
+%  378  190 AUT    Autolycus' Hideout
+%  318  190 CAL    Callisto's Stronghold
+%  508  231 CEC    Cecrops' Channel
+%  488  533 CEN    Centaur Forest
+%  168  218 CHA    Charon's Crossing
+%  448  568 CHI    Chiron's Cave
+%  373  358 CUP    Cupid's Cloud
+%  248  608 DEI    Deianeira's Grave
+%  558  368 EAS    Eastern Ocean
+%  488  478 ECH    Echo's Glade
+%  133  213 ELY    Elysian Fields
+%  178  578 FIE    Field of the Golden Fleece
+%  223  288 FIR    Sea of Fire
+%  238  190 FUR    Realm of the 3 Furies
+%  358  233 GAB    Gabrielle's Village
+%  388  513 GLI    Glittering Gulf
+%  278  448 GOC    Gulf of Chains
+%  318  233 HAD    Depths of Hades
+%  258  528 HER    Hercules' Respite
+%  228  363 HES    Shrine to Hestia
+%  231  365 HES/NC Shrine to Hestia (north coast)
+%  223  338 HES/SC Shrine to Hestia (south coast)
+%  478  283 HIN    Forest of the Golden Hind
+%  548  448 HIP    Hippolyta's Girdle
+%  148  508 JAS    Jason's Kingdom
+%  428  190 JOX    Joxter's Retreat
+%  148  328 LBS    Lesbian Sea
+%  195  355 LES    Isle of Lesbos
+%  358  308 LOV    Lover's Lane
+%  343  518 MID    Realm of King Midas
+%  568  508 MIN    Minotaur's Labyrinth
+%  198  448 MOR    Morpheus' Palace
+%  438  513 NAR    Narcissus' Reflection
+%  468  318 NES    Nestor's Kingdom
+%  318  568 OLY    Mount Olympus
+%  148  258 PEA    Ocean of Peace
+%  268  238 PER    Persephone's Garden
+%  388  278 POS    Poseidon's Curse
+%  328  438 PRO    Prometheus' Cliff
+%  388  388 PSY    Village of Psyche
+%  428  388 PSY/EC Village of Psyche (east coast)
+%  358  388 PSY/WC Village of Psyche (west coast)
+%  303  478 SAL    Salmonius' Scheme
+%  458  378 SCH    Scholars Channel
+%  518  338 SER    Serina's Village
+%  528  598 SIS    Sisyphus' Hill
+%  278  388 SOA    Sea of Arrows
+%  228  418 SOD    Sea of Dreams
+%  318  273 SOT    Sea of Tears
+%  538  193 SOU    South Sea
+%  398  468 SOW    Sea of Waves
+%  518  268 STR    Strife's Cave
+%  438  613 TAN    Tantalus' Pool
+%  218  238 TAR    Tartarus
+%  263  348 VES    Convent of the Vestal Virgins
+%  148  398 WES    Western Ocean
+%  408  228 XEN    Xena's Rest
+%  328  613 ZEU    Temple of Zeus
+% MAP
+
+%%BeginSetup
+/bd { bind def } bind def
+/xd { exch def } bd
+/ld { load def } bd
+/ifloor { .001 add floor cvi } bd
+/iceiling { .001 sub ceiling cvi } bd
+/min { 2 copy gt { exch } if pop } bd
+/max { 2 copy lt { exch } if pop } bd
+/secure_atan { 2 copy 0 eq exch 0 eq and { pop pop 0 } { atan } ifelse } bd
+/center { 3 2 roll add 2 div 3 1 roll add 2 div exch } bd
+/a /arc ld
+/c /curveto ld
+/d /setdash ld
+/f /fill ld
+/h /show ld
+/k /stroke ld
+/l /lineto ld
+/m /moveto ld
+/n /newpath ld
+/o /rotate ld
+/p /closepath ld
+/r /grestore ld
+/s /gsave ld
+/t /translate ld
+/w /setlinewidth ld
+/x /scale ld
+/y /scalefont ld
+/z /setfont ld
+/Powers 20 dict def
+%%IncludeResource: font Helvetica-Bold
+/MapUnitLetterFont /Helvetica-Bold findfont 14 y def
+%%IncludeResource: font Helvetica-Bold
+/MapNameFont /Helvetica-Bold findfont 14 y def
+%%IncludeResource: font Courier
+/TextFixedFont /Courier findfont def
+%%IncludeResource: font Courier-Bold
+/TextHeadingFont /Courier-Bold findfont def
+%%IncludeResource: font Times-Roman
+/TextTitleFont /Times-Roman findfont def
+/PageSetup {
+	612 0 t
+	90 o
+	/FinishReport { } def /InTextMode true def
+	Black
+	MovePhase
+} bd
+/ShowPage {
+	DrawAliases
+	InTextMode { FinishReport } { r } ifelse
+	FrameMap
+	showpage
+} bd
+/VisitColors {
+	3 dict begin
+	/c xd /r xd /g xd
+	/BorderBlack .1 g
+	/MountainGrey .5 g
+	/IceGrey .9 g
+	/ArrowBlack 0 g
+	/ArrowWhite .9 g
+	/Black 0 g
+	/White .9 g
+	/LandBrown .8 .7 .4 r
+	/SeaBlue .1 .4 .6 r
+	/ArrowRed 1 0 0 r
+	/ArrowBlue .529 .808 .922 r
+	/Brown .6 .45 .2 r
+	/Blue 0 0 1 r
+	/Red 1 0 0 r
+	/Green 0 .7 0 r
+	/DarkGreen 0 .4 0 r
+	end
+} def
+/VisitPowers {
+	1 dict begin
+	/p xd
+	/UNOWNED (?) /Brown /White p
+	/EAST (E) /Black /White p
+	/NORTH (N) /Blue /White p
+	/SOUTH (S) /Red /White p
+	/WEST (W) /Green /White p
+	end
+} def
+/DrawFleet {
+	SwitchToMapMode
+	Power begin
+	s t
+	.7 .7 x
+	0 8 t
+	s
+	.5 .5 x -35 -16 t
+	12 3 m 12 9 l 9 12 l 6 13 l 6 17 l % bow
+	9 17 l 9 23 l 2 22 l 7 16 l 6 16 l
+	1 22 l % bowsprit
+	6 27 l 12 37 l 15 45 l % front sail
+	19 44 l 19 48 l 16 48 l 15 49 l 19 49 l
+	19 55 l 20 55 l 20 49 l 24 49 l 23 48 l
+	20 48 l 20 44 l % front mast
+	24 43 l 24 34 l 27 29 l 33 29 l 33 32 l
+	25 32 l 28 39 l 31 51 l % mid sail left
+	35 50 l 35 54 l 30 54 l 29 55 l 35 55 l
+	35 63 l 36 63 l 36 56 l 36 55 l 42 55 l
+	41 54 l 36 54 l 36 50 l % mid mast
+	41 49 l 41 32 l 36 32 l 36 29 l 39 29 l
+	41 43 l % mid sail right
+	45 43 l 45 47 l 41 47 l 41 48 l 45 48 l
+	45 55 l 46 55 l 46 48 l 51 48 l 50 47 l
+	46 47 l 46 43 l % rear mast
+	48 43 l 49 28 l 51 28 l 51 31 l 54 33 l
+	54 23 l 57 26 l 57 22 l 56 21 l % rear sail and flag
+	56 15 l 59 12 l 59 7 l 57 4 l 55 3 l p % bow
+	s Controlled { s 12 w Outer k r } if 4 w Contrast k r Paint f
+	r
+	Offset aload pop m
+	MapUnitLetterFont z
+	Contrast Letter h
+	r
+	end
+} bd
+/DrawArmy {
+	SwitchToMapMode
+	Power begin
+	s t
+	.7 .7 x
+	0 8 t
+	n 0 0 9 0 360 a p % wheel
+	Controlled { s 6 w Outer k r } if 2 w Contrast k
+	-20 7 m 10 7 l 10 3 l 14 3 l
+	14 1 l -16 1 l -16 3 l -20 3 l p % barrel
+	4 2 m 24 -8 l 26 -8 l 18 -8 l -2 2 l % carriage
+	s Controlled { s 6 w Outer k r } if 2 w Contrast k r Paint f
+	n 0 0 9 0 360 a p % wheel
+	Paint f
+	Offset aload pop m
+	MapUnitLetterFont z
+	Contrast Letter h
+	r
+	end
+} bd
+/DrawAlias {
+	SwitchToMapMode
+	s
+	3 1 roll t
+	.7 .7 x
+	0 -14 t
+	MapNameFont z
+	dup stringwidth pop -2 div 0 neg m h
+	r
+} bd
+/DrawName {
+	pop pop pop
+} bd
+/VisitTerritories {
+	5 dict begin
+	/b xd
+	/g xd
+	/w xd
+	/l xd
+	/c xd
+	(MOR) 198 448 c
+	(ALC) 208 508 c
+	(HER) 258 528 c
+	(AEO) 378 568 c
+	(CHI) 448 568 c
+	(CEN) 488 533 c
+	(ECH) 488 478 c
+	(AMA) 498 438 c
+	(SAL) 303 478 c
+	(MID) 343 518 c
+	(PRO) 328 438 c
+	(LES) 195 355 c
+	(VES) 263 348 c
+	(CHA) 168 218 c
+	(TAR) 218 238 c
+	(PER) 268 238 c
+	(HAD) 318 233 c
+	(GAB) 358 233 c
+	(XEN) 408 228 c
+	(ARG) 453 218 c
+	(STR) 518 268 c
+	(SER) 518 338 c
+	(HIN) 478 283 c
+	(NES) 468 318 c
+	(MIN) 568 508 c
+	(CUP) 373 358 c
+	(APH) 398 428 c
+	(JAS) 148 508 c
+	(ELY) 133 213 c
+	(JOX) 428 190 c
+	(HIP) 548 448 c
+	(OLY) 318 568 l
+	(ARE) 513 308 l
+	(SIS) 528 598 l
+	(ZEU) 328 613 l
+	(TAN) 438 613 l
+	(FIE) 178 578 l
+	(FUR) 238 190 l
+	(CAL) 318 190 l
+	(AUT) 378 190 l
+	(DEI) 248 608 l
+	(SOD) 228 418 w
+	(GOC) 278 448 w
+	(WES) 148 398 w
+	(SOA) 278 388 w
+	(GLI) 388 513 w
+	(NAR) 438 513 w
+	(SOW) 398 468 w
+	(FIR) 223 288 w
+	(LBS) 148 328 w
+	(PEA) 148 258 w
+	(SOT) 318 273 w
+	(POS) 388 278 w
+	(CEC) 508 231 w
+	(SOU) 538 193 w
+	(EAS) 558 368 w
+	(SCH) 458 378 w
+	(LOV) 358 308 w
+	(HES) 228 363 g
+	(PSY) 388 388 g
+	(PSY/WC) 358 388 b
+	(PSY/EC) 428 388 b
+	(HES/NC) 231 365 b
+	(HES/SC) 223 338 b
+	end
+} def
+/VisitSupplies {
+	1 dict begin
+	/s xd
+	/MOR 198 428 s
+	/HER 258 508 s
+	/AEO 378 548 s
+	/CEN 488 513 s
+	/AMA 498 418 s
+	/PRO 328 423 s
+	/LES 180 348 s
+	/VES 263 328 s
+	/TAR 218 218 s
+	/HAD 318 213 s
+	/XEN 408 208 s
+	/STR 518 253 s
+	/ARE 513 293 s
+	/NES 468 303 s
+	/CUP 353 358 s
+	/APH 398 413 s
+	end
+} def
+/supply {
+	SwitchToMapMode
+	Power begin
+	s
+	t
+	.7 .7 x
+	Controlled {
+		Outer
+		n 0 0 8 0 360 a f
+		Contrast
+		n 0 0 6 0 360 a f
+	} if
+	Paint
+	n 0 0 4 0 360 a f
+	r
+	end
+} bd
+/SetArrowStateOk {
+	[] 0 d
+} bd
+/OkOrder {
+	/SetArrowState /SetArrowStateOk ld
+} bd
+/SetArrowStateFailed {
+	[4 6] 2 d
+} bd
+/FailedOrder {
+	/SetArrowState /SetArrowStateFailed ld
+} bd
+/MovePhase {
+	/ArrowColor /ArrowBlack ld
+	/ArrowBase 20 def
+	/TraceArrowHead /TraceSingleArrowHead ld
+	InTextMode not { ArrowColor } if
+} bd
+/RetreatPhase {
+	/ArrowColor /ArrowRed ld
+	/ArrowBase 39.8 def
+	/TraceArrowHead /TraceDoubleArrowHead ld
+	InTextMode not { ArrowColor } if
+} bd
+/ProposePhase {
+	/ArrowColor /ArrowWhite ld
+	/ArrowBase 39.8 def
+	/TraceArrowHead /TraceDoubleArrowHead ld
+	InTextMode not { ArrowColor } if
+} bd
+/TraceSingleArrowHead {
+	% draw the arrow head ...
+	n
+	dup -5 m
+	dup 20 add 0 l
+	dup 5 l
+	p
+} bd
+/TraceDoubleArrowHead {
+	% draw the double arrow head ...
+	n
+	dup -5 m
+	dup 19.8 add
+	dup -1 l
+	dup -5 l
+	dup 20 add 0 l
+	dup 5 l
+	1 l
+	dup 5 l
+	p
+} bd
+/PaintArrowMove {
+	s
+	3 index 3 index t
+	3 2 roll sub 3 1 roll exch sub exch
+	2 copy dup mul exch dup mul add sqrt 3 1 roll exch secure_atan
+	.7 .7 x
+	0 8 t
+	o
+	.7 div ArrowBase sub
+	% if base of arrow is long enough, shorten it enough
+	% to e.g. move arrow start beyond support circle
+	dup 14 gt {
+		14 14 0 t sub
+	} {
+		0 t 0
+	} ifelse
+	% if base is still too long, shorten it some more
+	% to make arrow head touch support circle
+	dup 14 gt {
+		14 sub
+	} {
+		pop 0
+	} ifelse
+	1 w
+	TraceArrowHead
+	k
+	% now the shaft ...
+	2 w
+	0 0 m
+	0 l
+	k
+	r
+} bd
+/PaintArrowCircle {
+	s
+	5 1 roll
+	3 index 3 index t
+	3 2 roll sub 3 1 roll exch sub exch
+	2 copy dup mul exch dup mul add sqrt 3 1 roll exch secure_atan
+	.7 .7 x
+	0 8 t
+	o
+	.7 div
+	1 index sub
+	% if base of arrow is long enough, shorten it enough
+	% to e.g. move arrow start beyond support circle
+	dup 14 gt {
+		14 14 0 t sub
+	} {
+		0 t 0
+	} ifelse
+	% draw the circle ...
+	1 w
+	n
+	2 copy add 0 4 3 roll 0 360 a
+	p k
+	% now the shaft ...
+	2 w
+	0 0 m
+	0 l
+	k
+	r
+} bd
+/PaintArrowArrive {
+	s
+	t
+	.7 .7 x
+	0 8 t
+	180 rotate 54 ArrowBase add neg 0 t
+	40
+	1 w
+	TraceArrowHead
+	k
+	% now the shaft ...
+	2 w
+	0 0 m
+	0 l
+	k
+	-5 0 m -10 0 l
+	-15 0 m -20 0 l
+	k
+	r
+} bd
+/PaintArrowDepart {
+	s
+	t
+	.7 .7 x
+	0 8 t
+	-54 0 t
+	40
+	2 w
+	0 0 m
+	0 l
+	-6 0 m -10 0 l
+	-16 0 m -20 0 l
+	k
+	r
+} bd
+/ArrowMove {
+	SwitchToMapMode
+	s
+	SetArrowState
+	PaintArrowMove
+	r
+} bd
+/ArrowHold {
+	SwitchToMapMode
+	s
+	SetArrowState
+	24 PaintArrowCircle
+	r
+} bd
+/ArrowSupport {
+	SwitchToMapMode
+	s
+	SetArrowState
+	center
+	8 PaintArrowCircle
+	r
+} bd
+/ArrowConvoy {
+	SwitchToMapMode
+	s
+	SetArrowState
+	center
+	12 PaintArrowCircle
+	r
+} bd
+/ArrowArrive {
+	SwitchToMapMode
+	s
+	SetArrowState
+	PaintArrowArrive
+	r
+} bd
+/ArrowDepart {
+	SwitchToMapMode
+	s
+	SetArrowState
+	PaintArrowDepart
+	r
+} bd
+/ArrowRetreat {
+	RetreatPhase
+	ArrowMove
+	MovePhase
+} bd
+/ArrowPropose {
+	ProposePhase
+	ArrowMove
+	MovePhase
+} bd
+/ArrowRetreatArrive {
+	RetreatPhase
+	ArrowArrive
+	MovePhase
+} bd
+/ArrowRetreatDepart {
+	RetreatPhase
+	ArrowDepart
+	MovePhase
+} bd
+/BuildUnit {
+	SwitchToMapMode
+	s
+	t
+	ArrowWhite
+	.7 .7 x
+	0 8 t
+	6 w [ 3.14 6.28 ] 1.57 d
+	n
+	0 0 24 0 360 a
+	p k
+	r
+} bd
+/SlashUnit {
+	s
+	3 1 roll t
+	.7 .7 x
+	0 8 t
+	n
+	-21 -16 m
+	11 16 l
+	21 16 l
+	-11 -16 l
+	p
+	exec
+	r
+} bd
+/DestroyUnit {
+	SwitchToMapMode
+	{ ArrowRed f } SlashUnit
+} bd
+/DisbandUnit {
+	SwitchToMapMode
+	{ s ArrowWhite f r 1 w ArrowRed k } SlashUnit
+} bd
+/RemoveUnit {
+	SwitchToMapMode
+	{ ArrowWhite f } SlashUnit
+} bd
+/FindUnit {
+	SwitchToMapMode
+	s
+	t
+	ArrowBlue
+	.7 .7 x
+	0 8 t
+	6 w [ 3.14 6.28 ] 1.57 d
+	n
+	0 0 24 0 360 a
+	p k
+	r
+} bd
+/LoseUnit {
+	SwitchToMapMode
+	s
+	t
+	ArrowBlue
+	.7 .7 x
+	0 8 t
+	4 w
+	-12 4 m
+	-8 7 -4 7 0 4 c
+	4 1 8 1 12 4 c
+	-12 -4 m
+	-8 -1 -4 -1 0 -4 c
+	4 -7 8 -7 12 -4 c
+	k
+	r
+} bd
+/QueryUnit {
+	SwitchToMapMode
+	s
+	t
+	ArrowWhite
+	.7 .7 x
+	0 8 t
+	4 w
+	-12 4 m
+	-8 7 -4 7 0 4 c
+	4 1 8 1 12 4 c
+	-12 -4 m
+	-8 -1 -4 -1 0 -4 c
+	4 -7 8 -7 12 -4 c
+	k
+	r
+} bd
+/PaintMap {
+	SwitchToMapMode
+	s
+	SeaBlue 119.36 174.16 478.8 464.4 rectfill
+	IncludeIsland
+	IncludeInternalBorders
+	r
+} bd
+/DrawMap {
+	PageSetup
+	PaintMap
+	DrawSupplies
+} bd
+/DrawSupplies {
+	SwitchToMapMode
+	UNOWNEDCENTER
+	{ supply pop } bind
+	VisitSupplies
+} bd
+/DrawAliases {
+	NameTerritories
+} bd
+/NameTerritories {
+	SwitchToMapMode
+	s
+	{ DarkGreen 3 2 roll DrawAlias } bind
+	{ DarkGreen 3 2 roll DrawAlias } bind
+	{ White 3 2 roll DrawAlias } bind
+	{ DarkGreen 3 2 roll DrawAlias } bind
+	{ pop pop pop } bind
+	VisitTerritories
+	r
+} bd
+/Controls {
+	/ChangeController true def
+} bd
+/SplitString {
+	7 dict begin
+	/nrChars xd
+	/indentString xd
+	/objectString xd
+	/objectLast objectString length 1 sub def
+	% Short string?
+	objectLast nrChars lt {
+		false objectString
+	} {
+		% Look for a suitable place to split.
+		% First tracking backwards, if that doesn't work, look forward.
+		/splitIndex -1 def
+		nrChars -1 0 {
+			objectString 1 index get 32 eq {
+				/splitIndex xd exit
+			} if pop
+		} for splitIndex -1 eq {
+			nrChars 1 add 1 objectLast {
+				objectString 1 index get 32 eq {
+					/splitIndex xd exit
+				} if pop
+			} for
+		} if
+		splitIndex -1 eq splitIndex objectLast eq or {
+			false objectString
+		} {
+			% The first part.
+			objectString 0 splitIndex getinterval
+			% The second part.
+			objectString splitIndex 1 add objectLast splitIndex sub getinterval
+			% Add indentation if needed.
+			indentString length 0 gt {
+				dup length indentString length add string
+				dup 0 indentString putinterval
+				dup indentString length 4 3 roll putinterval
+			} if
+			% Add white space of the first part.
+			/nonSpaceIndex objectLast 1 add def
+			0 1 objectLast {
+				objectString 1 index get 32 ne {
+					/nonSpaceIndex xd exit
+				} if pop
+			} for
+			nonSpaceIndex 0 gt nonSpaceIndex splitIndex lt and {
+				dup length nonSpaceIndex add string
+				dup 0 objectString 0 nonSpaceIndex getinterval putinterval
+				dup nonSpaceIndex 4 3 roll putinterval
+			} if
+			exch true exch
+		} ifelse
+	} ifelse
+	end
+} bd
+/DrawLayoutBorders {
+	s
+	TextFixedFont 12 y z
+	r
+} bd
+/Owner <<
+	/Steps [
+		{ /Count 0 def /Y 123.36 def false true } bind
+		{
+			Count 7 ge { false true } {
+				65 SplitString
+				/Count Count 1 add def /Y Y 12 sub def
+				21.6 Y m h
+				true false
+			} ifelse
+		} bind
+		{
+			65 SplitString [ exch {
+				21.6 27.36 m h
+			} /exec load ] cvx /Finish xd
+			true true
+		} bind
+		{
+			/Count 1 def /Finish {
+				21.6 27.36 m (... \() h
+				Count dup 1 add log iceiling string cvs h
+				( more\)) h
+			} bd false true
+		} bind
+		{ /Count Count 1 add def 65 SplitString pop true false } bind
+	]
+	/Start {
+		TextFixedFont 12 y z
+		/StepIndex 0 def
+		/Step Steps 0 get def
+		/Finish { } def
+	} bind
+	/Write {
+		(  ) {
+			Step {
+				/StepIndex StepIndex 1 add def
+				/Step Steps StepIndex get def
+			} if { not { exit } if () } if
+		} loop
+	} bind
+>> def
+/OwnerReport {
+	SwitchToTextMode
+	Owner begin Start end
+	/FinishReport /FinishOwnerReport load def
+} bd
+/WriteOwner {
+	Owner begin Write end
+} bd
+/FinishOwnerReport {
+	Owner begin Finish end
+} bd
+/Adjustment <<
+	/Steps [
+		{ /Count 0 def /Y 123.36 def false true } bind
+		{
+			Count 7 ge { false true } {
+				37 SplitString
+				/Count Count 1 add def /Y Y 12 sub def
+				504 Y m h
+				true false
+			} ifelse
+		} bind
+		{
+			37 SplitString [ exch {
+				504 27.36 m h
+			} /exec load ] cvx /Finish xd
+			true true
+		} bind
+		{
+			/Count 1 def /Finish {
+				504 27.36 m (... \() h
+				Count dup 1 add log iceiling string cvs h
+				( more\)) h
+			} bd false true
+		} bind
+		{ /Count Count 1 add def 37 SplitString pop true false } bind
+	]
+	/Start {
+		TextHeadingFont 12 y z
+		504 123.36 moveto
+		(Adjustments) h
+		TextFixedFont 12 y z
+		/StepIndex 0 def
+		/Step Steps 0 get def
+		/Finish { } def
+	} bind
+	/Write {
+		(  ) {
+			Step {
+				/StepIndex StepIndex 1 add def
+				/Step Steps StepIndex get def
+			} if { not { exit } if () } if
+		} loop
+	} bind
+>> def
+/AdjustReport {
+	SwitchToTextMode
+	Adjustment begin Start end
+	/FinishReport /FinishAdjustReport load def
+} bd
+/WriteAdjust {
+	Adjustment begin Write end
+} bd
+/FinishAdjustReport {
+	Adjustment begin Finish end
+} bd
+/Retreat <<
+	/Steps [
+		{ /Count 0 def /Y 231.36 def false true } bind
+		{
+			Count 7 ge { false true } {
+				37 SplitString
+				/Count Count 1 add def /Y Y 12 sub def
+				504 Y m h
+				true false
+			} ifelse
+		} bind
+		{
+			37 SplitString [ exch {
+				504 135.36 m h
+			} /exec load ] cvx /Finish xd
+			true true
+		} bind
+		{
+			/Count 1 def /Finish {
+				504 135.36 m (... \() h
+				Count dup 1 add log iceiling string cvs h
+				( more\)) h
+			} bd false true
+		} bind
+		{ /Count Count 1 add def 37 SplitString pop true false } bind
+	]
+	/Start {
+		TextHeadingFont 12 y z
+		504 231.36 moveto
+		(Retreats) h
+		TextFixedFont 12 y z
+		/StepIndex 0 def
+		/Step Steps 0 get def
+		/Finish { } def
+	} bind
+	/Write {
+		(  ) {
+			Step {
+				/StepIndex StepIndex 1 add def
+				/Step Steps StepIndex get def
+			} if { not { exit } if () } if
+		} loop
+	} bind
+>> def
+/RetreatReport {
+	SwitchToTextMode
+	Retreat begin Start end
+	/FinishReport /FinishRetreatReport load def
+} bd
+/WriteRetreat {
+	Retreat begin Write end
+} bd
+/FinishRetreatReport {
+	Retreat begin Finish end
+} bd
+/Order <<
+	/Steps [
+		{ /Count 0 def /Y 519.36 def false true } bind
+		{
+			Count 22 ge { false true } {
+				37 SplitString
+				/Count Count 1 add def /Y Y 12 sub def
+				504 Y m h
+				true false
+			} ifelse
+		} bind
+		{
+			37 SplitString [ exch {
+				504 243.36 m h
+			} /exec load ] cvx /Finish xd
+			true true
+		} bind
+		{
+			/Count 1 def /Finish {
+				504 243.36 m (... \() h
+				Count dup 1 add log iceiling string cvs h
+				( more\)) h
+			} bd false true
+		} bind
+		{ /Count Count 1 add def 37 SplitString pop true false } bind
+	]
+	/Start {
+		TextFixedFont 12 y z
+		/StepIndex 0 def
+		/Step Steps 0 get def
+		/Finish { } def
+	} bind
+	/Write {
+		(  ) {
+			Step {
+				/StepIndex StepIndex 1 add def
+				/Step Steps StepIndex get def
+			} if { not { exit } if () } if
+		} loop
+	} bind
+>> def
+/OrderReport {
+	SwitchToTextMode
+	Order begin Start end
+	/FinishReport /FinishOrderReport load def
+} bd
+/WriteOrder {
+	Order begin Write end
+} bd
+/FinishOrderReport {
+	Order begin Finish end
+} bd
+/DrawTitle {
+	SwitchToTextMode
+	TextTitleFont 36 y z
+	(Diplomacy)
+	504 562.08 m h
+	TextTitleFont 24 y z
+	dup stringwidth pop dup 266.4 gt {
+		504 528 m
+		266.4 exch div dup 1 x exch
+		0 6.72 rmoveto h
+		1 exch div 1 x
+	} {
+		pop 504 534.72 m h
+	} ifelse
+} bd
+/SwitchToTextMode {
+	InTextMode {
+		FinishReport /FinishReport { } def
+	} {
+		r /InTextMode true def
+	} ifelse
+} bd
+/SwitchToMapMode {
+	InTextMode {
+		FinishReport /FinishReport { } def
+		/InTextMode false def
+		s
+		27.6 138 456 444 rectclip .9649 .9649 x -93.87 -33.27 t
+		ArrowColor
+		OkOrder
+	} if
+} bd
+/FrameMap {
+	s
+	2 w LandBrown
+	24.6 135.95 m 486.6 135.95 l 486.6 584.05 l 24.6 584.05 l
+	p
+	s 8 w Black k r
+	clipsave clip k cliprestore
+	r
+} bd
+/IncludeIsland {
+	s
+	/fk {
+		p
+		s LandBrown f r
+		k
+	} bd
+	1 w BorderBlack
+	OutlineChartBrown
+	r
+} bd
+/IncludeInternalBorders {
+	s
+	/fk { k } bd
+	1 w [ 6 2 ] 3 d BorderBlack
+	OutlineChartBlack
+	r
+} bd
+/OutlineChartBrown {
+	445.36 307.84 m
+	448.72 301.2 l
+	453.2 298.8 l
+	456.8 294 l
+	455.6 288.32 l
+	460.8 277.36 l
+	473.6 267.6 l
+	476.88 265.52 l
+	480.8 264.32 l
+	482.56 261.36 l
+	490.8 255.12 l
+	510.56 246.72 l
+	521.28 244.8 l
+	540 255.12 l
+	543.2 259.2 l
+	547.36 270.96 l
+	544.4 274.24 l
+	544.96 280.56 l
+	549.76 283.52 l
+	553.12 288 l
+	559.68 288.96 l
+	561.6 292.96 l
+	559.2 309.12 l
+	545.36 335.52 l
+	535.76 341.52 l
+	520.8 349.92 l
+	489.6 352.32 l
+	461.36 334.96 l
+	459.2 329.12 l
+	454.4 325.2 l
+	445.2 307.92 l
+	445.36 307.84 l
+	fk
+	120 173.92 m
+	120 218.72 l
+	126.56 229.36 l
+	142.16 234.16 l
+	158.4 226.96 l
+	172.96 228 l
+	192 234.16 l
+	212.4 246.16 l
+	235.2 248.56 l
+	266.96 244.96 l
+	271.36 244.8 l
+	277.68 242.16 l
+	296.4 240.72 l
+	307.68 237.36 l
+	323.92 242.72 l
+	338.88 240 l
+	362.96 241.92 l
+	379.76 251.52 l
+	387.76 251.12 l
+	403.12 253.2 l
+	424.8 250.32 l
+	433.12 241.2 l
+	448.08 236.72 l
+	460.08 228.96 l
+	472.08 225.92 l
+	489.6 211.36 l
+	476.4 189.76 l
+	476.96 174.16 l
+	120 173.92 l
+	fk
+	170.4 342.72 m
+	175.76 338.56 l
+	183.52 337.2 l
+	193.2 332.56 l
+	214.16 343.92 l
+	224 341.12 l
+	234.56 342.16 l
+	240.56 333.12 l
+	246 315.12 l
+	252.56 312.16 l
+	262.72 310.8 l
+	271.2 314.56 l
+	280.16 322.96 l
+	284.96 333.76 l
+	280.96 345.04 l
+	279.6 354.72 l
+	269.36 359.52 l
+	261.6 364.96 l
+	250.96 368.16 l
+	244.8 372.72 l
+	227.6 374.72 l
+	217.12 372.32 l
+	199.76 372.16 l
+	187.76 370.32 l
+	181.76 370.96 l
+	172.8 363.12 l
+	169.76 356.56 l
+	170.96 342.16 l
+	170.4 342.72 l
+	fk
+	347.36 349.36 m
+	364.16 341.52 l
+	382.72 342 l
+	385.76 346.96 l
+	393.2 355.2 l
+	398.32 356.72 l
+	403.2 361.36 l
+	415.76 371.52 l
+	416 388.56 l
+	430.16 407.52 l
+	421.76 433.92 l
+	411.52 439.52 l
+	400.08 440.16 l
+	390.48 440.16 l
+	382.8 436.96 l
+	376.16 421.36 l
+	364.8 406.32 l
+	363.52 395.44 l
+	350.96 375.76 l
+	342.48 366 l
+	341.28 353.44 l
+	347.28 348.96 l
+	347.36 349.36 l
+	fk
+	597.2 637.12 m
+	120 637.52 l
+	119.92 432 l
+	178.8 433.36 l
+	190.4 422.16 l
+	197.92 420 l
+	202.8 421.92 l
+	210.48 432.96 l
+	216 446.56 l
+	217.76 449.52 l
+	227.36 472.96 l
+	234.56 483.12 l
+	238.8 483.12 l
+	241.76 492.16 l
+	250.8 485.52 l
+	256.8 486.16 l
+	266.4 478.32 l
+	278.4 477.76 l
+	286.8 457.36 l
+	298.8 442.32 l
+	302.96 435.76 l
+	310.16 408.16 l
+	324 409.36 l
+	324.56 412.96 l
+	337.76 414.72 l
+	346.16 437.52 l
+	351.6 444.16 l
+	346.16 481.92 l
+	366.56 510.72 l
+	364.16 517.92 l
+	371.36 528.16 l
+	379.76 536.56 l
+	391.76 540.72 l
+	401.36 546.72 l
+	404.4 546.72 l
+	421.2 549.12 l
+	425.36 547.92 l
+	428.96 547.92 l
+	444.56 540.72 l
+	456 531.76 l
+	469.2 507.12 l
+	464.96 486.16 l
+	464.96 453.12 l
+	476.4 424.32 l
+	483.6 420.72 l
+	492 397.36 l
+	492.56 393.12 l
+	496.16 393.12 l
+	499.76 388.96 l
+	511.76 391.36 l
+	525.6 402.72 l
+	535.76 415.92 l
+	543.6 426.16 l
+	559.2 429.76 l
+	567.6 429.76 l
+	572.96 426.16 l
+	582 425.52 l
+	597.6 418.32 l
+	597.2 637.12 l
+	fk
+} bd
+/OutlineChartBlack {
+	145.76 232.32 m
+	146.4 219.12 l
+	144.56 212.56 l
+	144 207.76 l
+	146.96 203.52 l
+	149.36 199.92 l
+	171.6 196.96 l
+	178.8 197.52 l
+	193.2 201.12 l
+	200.4 210.72 l
+	196.8 216.72 l
+	194.4 235.36 l
+	fk
+	192 201.76 m
+	194.96 196.96 l
+	202.8 196.96 l
+	212.96 196.32 l
+	216.56 199.36 l
+	230.96 198.16 l
+	237.6 202.32 l
+	240 206.56 l
+	250.8 208.96 l
+	244.8 221.52 l
+	242.4 225.76 l
+	244.16 234.72 l
+	243.76 247.2 l
+	fk
+	198 174.72 m
+	202.8 182.56 l
+	209.92 190.24 l
+	214.8 198.16 l
+	fk
+	251.36 208.96 m
+	255.6 205.36 l
+	265.2 199.92 l
+	270 199.36 l
+	274.16 194.56 l
+	283.12 190.8 l
+	286.16 184.96 l
+	291.6 183.12 l
+	296.4 174.72 l
+	fk
+	270.48 199.2 m
+	277.2 200.56 l
+	282 201.76 l
+	286.8 201.76 l
+	294.56 199.36 l
+	301.76 199.92 l
+	291.6 210.72 l
+	290.4 214.96 l
+	290.4 228.72 l
+	297.2 240.96 l
+	fk
+	301.68 199.52 m
+	306 199.36 l
+	324 199.92 l
+	328.16 196.96 l
+	345.6 196.96 l
+	351.6 186.16 l
+	349.2 174.72 l
+	fk
+	338.88 239.76 m
+	337.76 232.32 l
+	340.8 218.56 l
+	340.8 213.76 l
+	344.96 205.92 l
+	344.96 197.52 l
+	fk
+	350.96 187.36 m
+	356.96 190.96 l
+	360.56 199.92 l
+	370.16 204.16 l
+	377.36 211.36 l
+	380.4 220.96 l
+	386.96 236.56 l
+	385.2 243.12 l
+	387.76 251.12 l
+	fk
+	378.56 213.76 m
+	383.36 208.96 l
+	388.16 207.76 l
+	391.2 202.96 l
+	403.36 195.92 l
+	397.76 187.92 l
+	398.4 183.12 l
+	400.8 181.36 l
+	395.2 174.32 l
+	fk
+	403.12 196.24 m
+	412.16 201.12 l
+	417.52 207.04 l
+	424.16 210.16 l
+	434.96 213.76 l
+	437.36 219.76 l
+	451.2 234.72 l
+	fk
+	417.52 207.36 m
+	454.16 192.72 l
+	459.6 193.36 l
+	477.6 189.76 l
+	fk
+	492 351.76 m
+	498 333.76 l
+	503.36 325.92 l
+	fk
+	503.36 325.92 m
+	503.36 321.76 l
+	487.76 312.16 l
+	484.16 306.72 l
+	466.8 291.76 l
+	456.8 286.24 l
+	fk
+	482.96 305.52 m
+	490.8 299.52 l
+	490.8 294.72 l
+	500.96 287.52 l
+	502.16 283.92 l
+	497.36 271.92 l
+	491.36 262.96 l
+	484.8 259.36 l
+	fk
+	501.2 286.8 m
+	508.8 283.36 l
+	516.56 282.16 l
+	527.36 283.92 l
+	531.6 292.96 l
+	537.6 301.36 l
+	546 306.72 l
+	559.2 307.92 l
+	fk
+	502.8 325.36 m
+	506.4 325.36 l
+	511.2 320.56 l
+	518.4 321.12 l
+	524.4 321.12 l
+	529.76 319.36 l
+	536.4 316.96 l
+	545.36 310.32 l
+	546 306.72 l
+	fk
+	350.56 375.36 m
+	371.36 370.96 l
+	393.6 373.36 l
+	413.36 370.32 l
+	413.36 370.96 l
+	fk
+	364.16 404.56 m
+	372.56 408.16 l
+	382.8 404.56 l
+	394.16 403.36 l
+	399.6 405.76 l
+	407.36 403.36 l
+	418.8 400.96 l
+	422.4 402.16 l
+	425.92 402 l
+	fk
+	213.2 372 m
+	205.76 339.76 l
+	fk
+	241.2 330.16 m
+	242.4 335.52 l
+	246.56 339.12 l
+	248.4 345.76 l
+	252 352.32 l
+	256.8 358.32 l
+	266.4 361.36 l
+	fk
+	464.96 463.92 m
+	491.36 462.16 l
+	499.76 460.32 l
+	507.6 460.32 l
+	518.4 454.32 l
+	522 442.32 l
+	522.56 438.72 l
+	526.8 437.52 l
+	530.4 432.16 l
+	533.36 432.16 l
+	542.32 423.36 l
+	fk
+	570.48 427.52 m
+	571.2 433.92 l
+	566.4 445.36 l
+	570.56 452.56 l
+	578.4 459.12 l
+	582.56 468.72 l
+	577.76 478.96 l
+	559.76 478.96 l
+	546 468.16 l
+	538.16 469.92 l
+	531.6 477.12 l
+	522 477.12 l
+	517.76 472.96 l
+	514.16 468.72 l
+	518.4 454.32 l
+	fk
+	169.76 493.36 m
+	192 490.96 l
+	195.6 482.56 l
+	205.2 476.56 l
+	208.8 466.32 l
+	222 459.12 l
+	fk
+	241.68 491.76 m
+	241.76 495.12 l
+	232.16 510.16 l
+	225.6 531.12 l
+	219.6 543.76 l
+	181.2 543.12 l
+	fk
+	223.2 638.56 m
+	222.56 622.32 l
+	235.76 601.36 l
+	230.4 591.12 l
+	225.6 579.76 l
+	222 567.76 l
+	220.8 560.56 l
+	220.16 541.92 l
+	fk
+	346.16 481.92 m
+	337.2 475.36 l
+	332.4 468.72 l
+	318 462.72 l
+	305.36 454.96 l
+	297.76 443.44 l
+	fk
+	277.2 477.12 m
+	282 496.32 l
+	288.56 514.32 l
+	301.2 526.32 l
+	312.56 525.12 l
+	315.6 515.52 l
+	316.16 503.52 l
+	319.2 491.52 l
+	325.76 485.52 l
+	337.76 476.56 l
+	fk
+	293.36 639.12 m
+	290.96 626.56 l
+	288.56 604.96 l
+	276 589.92 l
+	257.36 584.56 l
+	254.4 590.56 l
+	248.4 591.12 l
+	232.16 594.72 l
+	fk
+	391.2 639.12 m
+	388.8 631.92 l
+	388.8 624.72 l
+	393.6 613.36 l
+	395.28 600.96 l
+	388.8 599.52 l
+	382.8 595.36 l
+	373.76 590.56 l
+	358.8 586.96 l
+	342 586.32 l
+	325.76 586.32 l
+	314.96 589.36 l
+	309.6 591.12 l
+	288.56 604.96 l
+	fk
+	348.16 586.8 m
+	343.76 570.16 l
+	342.56 561.12 l
+	343.2 550.32 l
+	344.96 546.72 l
+	349.76 545.52 l
+	355.76 544.96 l
+	358.16 539.52 l
+	370.16 525.76 l
+	fk
+	312.16 525.36 m
+	317.36 535.36 l
+	326.96 535.36 l
+	332.96 535.36 l
+	345.6 546.72 l
+	fk
+	272.88 589.2 m
+	271.2 564.72 l
+	277.76 549.76 l
+	283.76 540.16 l
+	301.76 526.32 l
+	fk
+	394.8 601.36 m
+	409.2 594.16 l
+	415.2 589.92 l
+	439.2 589.92 l
+	442.8 593.52 l
+	458.96 598.32 l
+	468.56 597.12 l
+	481.2 592.32 l
+	485.92 591.36 l
+	491.36 598.96 l
+	491.36 605.52 l
+	483.6 618.16 l
+	484.16 622.96 l
+	492 639.12 l
+	fk
+	418.72 589.84 m
+	421.76 557.52 l
+	421.76 549.12 l
+	fk
+	454.8 532.96 m
+	462.56 545.52 l
+	468.56 555.12 l
+	476.96 559.36 l
+	483.6 564.72 l
+	493.2 565.92 l
+	498 568.96 l
+	515.36 570.16 l
+	516 573.76 l
+	fk
+	531.6 476.56 m
+	540.56 481.92 l
+	542.96 487.36 l
+	541.2 497.52 l
+	539.36 501.76 l
+	532.8 503.52 l
+	524.96 505.92 l
+	506.4 504.16 l
+	493.76 506.56 l
+	468.56 507.76 l
+	fk
+	518.4 505.92 m
+	514.8 513.12 l
+	516 520.32 l
+	519.6 526.32 l
+	523.2 528.16 l
+	536.96 525.76 l
+	546.56 524.56 l
+	553.2 527.52 l
+	559.76 547.92 l
+	fk
+	118.8 298.32 m
+	128.4 289.92 l
+	135.6 289.92 l
+	146.4 291.76 l
+	152.4 292.32 l
+	163.2 296.56 l
+	172.8 295.36 l
+	212.4 246.16 l
+	fk
+	192 332.56 m
+	192 324.72 l
+	190.8 320.56 l
+	188.96 317.52 l
+	182.4 310.96 l
+	170.96 294.72 l
+	fk
+	118.8 368.32 m
+	127.76 362.56 l
+	139.2 362.56 l
+	144 364.32 l
+	153.6 359.52 l
+	170.4 355.92 l
+	fk
+	175.2 433.36 m
+	175.2 421.92 l
+	174 415.36 l
+	181.2 402.16 l
+	182.96 397.92 l
+	192 388.96 l
+	194.96 387.76 l
+	196.16 371.52 l
+	fk
+	184.72 395.44 m
+	194.96 396.16 l
+	203.36 392.56 l
+	210 392.56 l
+	230.4 396.72 l
+	244.8 402.16 l
+	265.2 415.92 l
+	266.96 423.12 l
+	260.96 432.16 l
+	252 438.72 l
+	246.56 448.96 l
+	227.36 471.76 l
+	fk
+	266.88 423.04 m
+	282.56 417.76 l
+	290.4 416.56 l
+	307.2 420.72 l
+	fk
+	284.88 334.24 m
+	293.36 334.96 l
+	312 341.52 l
+	317.36 340.32 l
+	334.16 343.36 l
+	347.28 348.96 l
+	fk
+	343.36 429.92 m
+	356.4 430.32 l
+	360.56 432.16 l
+	366.56 430.96 l
+	376.08 421.84 l
+	fk
+	349.12 458.4 m
+	360 469.36 l
+	366 477.12 l
+	379.76 481.36 l
+	397.2 480.16 l
+	409.2 483.12 l
+	412.8 487.36 l
+	413.36 496.32 l
+	415.76 508.96 l
+	415.2 517.92 l
+	410.96 533.52 l
+	408 547.92 l
+	fk
+	413.36 489.76 m
+	420.56 486.16 l
+	427.2 486.16 l
+	443.36 484.32 l
+	444.56 481.36 l
+	454.16 484.96 l
+	464.56 484.8 l
+	fk
+	426.56 420.72 m
+	430.16 424.32 l
+	438.56 424.96 l
+	452.4 425.52 l
+	457.2 425.52 l
+	470.4 420.72 l
+	484.8 418.96 l
+	fk
+	519.52 397.84 m
+	523.2 381.76 l
+	529.76 370.32 l
+	534.56 359.52 l
+	536.96 346.96 l
+	536.96 340.32 l
+	fk
+	401.92 359.76 m
+	417.6 352.32 l
+	426 351.76 l
+	451.76 347.52 l
+	457.76 347.52 l
+	475.36 343.84 l
+	fk
+	489.52 210.96 m
+	510.56 215.52 l
+	542.96 222.72 l
+	565.2 229.36 l
+	598.16 234.16 l
+	fk
+	540.56 255.76 m
+	544.16 247.36 l
+	552.56 237.12 l
+	559.2 238.32 l
+	566.4 229.36 l
+	fk
+	424.8 250.96 m
+	436.16 250.32 l
+	446.96 252.16 l
+	470.88 269.44 l
+	fk
+	357.76 241.2 m
+	363.6 267.76 l
+	364.16 280.96 l
+	371.36 291.12 l
+	380.4 294.16 l
+	399.6 298.96 l
+	425.36 300.16 l
+	446.88 304.56 l
+	fk
+	270.56 315.12 m
+	279.6 299.52 l
+	277.2 286.32 l
+	277.76 273.76 l
+	269.36 258.16 l
+	267.6 245.52 l
+	fk
+	278.4 289.36 m
+	297.6 294.72 l
+	312 298.32 l
+	322.16 294.72 l
+	332.4 293.52 l
+	342.56 291.76 l
+	344.4 289.92 l
+	371.36 291.12 l
+	fk
+	120 559.92 m
+	128.4 547.92 l
+	143.36 543.12 l
+	157.2 546.16 l
+	177.6 547.36 l
+	182.4 541.92 l
+	181.76 537.76 l
+	184.8 528.72 l
+	181.2 520.96 l
+	181.2 513.12 l
+	172.16 493.36 l
+	168 493.36 l
+	159.6 478.96 l
+	160.8 469.92 l
+	160.8 462.72 l
+	154.16 454.32 l
+	151.2 450.72 l
+	155.92 432.64 l
+	fk
+	485.36 591.76 m
+	498 589.36 l
+	502.16 585.12 l
+	506.96 580.32 l
+	514.8 576.16 l
+	518.4 568.96 l
+	527.36 558.72 l
+	530.96 553.92 l
+	547.76 553.92 l
+	555.6 549.76 l
+	562.8 545.52 l
+	566.96 559.92 l
+	571.2 568.96 l
+	579.6 571.36 l
+	584.4 570.72 l
+	597.6 564.16 l
+	fk
+} bd
+{
+	currentdict end 3 1 roll [ exch /setgray load ] cvx def begin
+}{
+	currentdict end 5 1 roll [ 4 1 roll /setrgbcolor load ] cvx def begin
+}{
+	currentdict end 6 1 roll [ 5 1 roll /setcmykcolor load ] cvx def begin
+} bind VisitColors
+{ currentdict end 4 1 roll [ 3 1 roll ] cvx def begin } bind
+VisitSupplies
+s
+MapUnitLetterFont z
+{
+	exch load exch load
+	2 index [ exch n 0 0 m true charpath pathbbox 3 2 roll add -2 div 3 1 roll add -2 div exch ] 3 1 roll
+	4 dict begin /Contrast xd /Paint xd /Offset xd /Letter xd currentdict end
+	[ /Power 3 2 roll { dup /Controlled ChangeController put ChangeController { dup /Outer Power /Paint get put /ChangeController false def } if } /exec load /def load ] cvx
+	currentdict end 3 1 roll def begin
+} VisitPowers
+r
+/ChangeController false def
+/UNOWNEDCENTER /UNOWNED ld
+/EASTCENTER /EAST ld
+/NORTHCENTER /NORTH ld
+/SOUTHCENTER /SOUTH ld
+/WESTCENTER /WEST ld
+%%EndSetup
