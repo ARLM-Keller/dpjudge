@@ -1,0 +1,1088 @@
+%!PS-Adobe-3.0
+%%Title: Diplomacy Map (pure map)
+%%Creator: dpmap, using a map created with DPeye by Mario Huys (woelpad@yahoo.com)
+%%DocumentPaperSizes: $Letter
+%%LanguageLevel: 2
+%%Orientation: Landscape
+%%Pages: (atend)
+%%DocumentNeededResources: font Helvetica-Bold Courier Courier-Bold Times-Roman
+%%EndComments
+
+%%BeginDefaults
+%%PageResources: font Helvetica-Bold Courier Courier-Bold Times-Roman
+%%EndDefaults
+
+% INFO
+%  250  400 BER    Berlin
+%  396  217 CON    Constantinople
+%  133  344 LON    London
+%  367  344 MOS    Moscow
+%  104  217 PAR    Paris
+%  185  115 ROM    Rome
+%  315  115 VIE    Vienna
+% MAP
+
+%%BeginSetup
+/bd { bind def } bind def
+/xd { exch def } bd
+/ld { load def } bd
+/ifloor { .001 add floor cvi } bd
+/iceiling { .001 sub ceiling cvi } bd
+/min { 2 copy gt { exch } if pop } bd
+/max { 2 copy lt { exch } if pop } bd
+/secure_atan { 2 copy 0 eq exch 0 eq and { pop pop 0 } { atan } ifelse } bd
+/center { 3 2 roll add 2 div 3 1 roll add 2 div exch } bd
+/a /arc ld
+/c /curveto ld
+/d /setdash ld
+/f /fill ld
+/h /show ld
+/k /stroke ld
+/l /lineto ld
+/m /moveto ld
+/n /newpath ld
+/o /rotate ld
+/p /closepath ld
+/r /grestore ld
+/s /gsave ld
+/t /translate ld
+/w /setlinewidth ld
+/x /scale ld
+/y /scalefont ld
+/z /setfont ld
+/Powers 20 dict def
+%%IncludeResource: font Helvetica-Bold
+/MapUnitLetterFont /Helvetica-Bold findfont 14 y def
+%%IncludeResource: font Helvetica-Bold
+/MapNameFont /Helvetica-Bold findfont 14 y def
+%%IncludeResource: font Courier
+/TextFixedFont /Courier findfont def
+%%IncludeResource: font Courier-Bold
+/TextHeadingFont /Courier-Bold findfont def
+%%IncludeResource: font Times-Roman
+/TextTitleFont /Times-Roman findfont def
+/PageSetup {
+	612 0 t
+	90 o
+	/FinishReport { } def /InTextMode true def
+	Black
+	MovePhase
+} bd
+/ShowPage {
+	DrawAliases
+	DrawRemainingCenters
+	InTextMode { FinishReport } { r } ifelse
+	FrameMap
+	showpage
+} bd
+/VisitColors {
+	3 dict begin
+	/c xd /r xd /g xd
+	/BorderBlack .1 g
+	/MountainGrey .5 g
+	/IceGrey .9 g
+	/ArrowBlack 0 g
+	/ArrowWhite .9 g
+	/Black 0 g
+	/White .9 g
+	/LandBrown .8 .7 .4 r
+	/SeaBlue .1 .4 .6 r
+	/ArrowRed 1 0 0 r
+	/ArrowBlue .529 .808 .922 r
+	/Brown .6 .45 .2 r
+	/Blue 0 0 1 r
+	/Turquoise .2 .7 .7 r
+	/Yellow 1 1 0 r
+	/Red 1 0 0 r
+	/Green 0 .7 0 r
+	/DarkGreen 0 .4 0 r
+	end
+} def
+/VisitPowers {
+	1 dict begin
+	/p xd
+	/UNOWNED (?) /Brown /White p
+	/ENGLAND (E) /Blue /White p
+	/FRANCE (F) /Turquoise /Black p
+	/GERMANY (G) /Black /White p
+	/RUSSIA (R) /White /Black p
+	/TURKEY (T) /Yellow /Black p
+	/AUSTRIA (A) /Red /Black p
+	/ITALY (I) /Green /Black p
+	end
+} def
+/PaintFleet {
+	begin
+	.7 .7 x
+	0 8 t
+	-26 -7 m -26 -2 l -19 -2 l -19 -1 l % to bow
+	-22 -1 l -22 0 l -15 0 l -15 1 l % A turret
+	-18 1 l -18 2 l -10 2 l -10 0 l % B turret
+	-9 0 l -9 4 l -8 4 l -8 6 l % conn tower
+	-6 6 l -6 5 l -5 5 l -5 9 l % Infra struct
+	-3 9 l -3 14 l -2 14 l -2 9 l % funnel 1
+	0 9 l 0 5 l 1 5 l 1 8 l % funnel 2
+	3 8 l 3 13 l 4 13 l 4 8 l % mast 2
+	6 8 l 6 0 l 8 0 l 8 2 l % funnel 2
+	16 2 l 16 1 l 13 1 l 13 0 l % C turret
+	20 0 l 20 -1 l 17 -1 l 17 -2 l % D turret
+	23 -2 l 23 -3 l 25 -3 l 25 -5 l % stern
+	24 -5 l 24 -7 l p
+	s 2 w Contrast k r Paint f
+	Offset aload pop m
+	MapUnitLetterFont z
+	Contrast Letter h
+	end
+} bd
+/FleetTroopBBox [
+	-18.9 0 18.2 16.1
+] def
+/PaintControlledFleet {
+	begin
+	.7 .7 x
+	0 8 t
+	-26 -7 m -26 -2 l -19 -2 l -19 -1 l % to bow
+	-22 -1 l -22 0 l -15 0 l -15 1 l % A turret
+	-18 1 l -18 2 l -10 2 l -10 0 l % B turret
+	-9 0 l -9 4 l -8 4 l -8 6 l % conn tower
+	-6 6 l -6 5 l -5 5 l -5 9 l % Infra struct
+	-3 9 l -3 14 l -2 14 l -2 9 l % funnel 1
+	0 9 l 0 5 l 1 5 l 1 8 l % funnel 2
+	3 8 l 3 13 l 4 13 l 4 8 l % mast 2
+	6 8 l 6 0 l 8 0 l 8 2 l % funnel 2
+	16 2 l 16 1 l 13 1 l 13 0 l % C turret
+	20 0 l 20 -1 l 17 -1 l 17 -2 l % D turret
+	23 -2 l 23 -3 l 25 -3 l 25 -5 l % stern
+	24 -5 l 24 -7 l p
+	s s 6 w Outer k r 2 w Contrast k r Paint f
+	Offset aload pop m
+	MapUnitLetterFont z
+	Contrast Letter h
+	end
+} bd
+/ControlledFleetTroopBBox [
+	-20.3 -1.4 19.6 17.5
+] def
+/DrawFleet {
+	SwitchToMapMode
+	s t
+	FleetTroops Power get execform
+	r
+} bd
+/PaintArmy {
+	begin
+	.7 .7 x
+	0 8 t
+	n 0 0 9 0 360 a p % wheel
+	2 w Contrast k
+	-20 7 m 10 7 l 10 3 l 14 3 l
+	14 1 l -16 1 l -16 3 l -20 3 l p % barrel
+	4 2 m 24 -8 l 26 -8 l 18 -8 l -2 2 l % carriage
+	s 2 w Contrast k r Paint f
+	n 0 0 9 0 360 a p % wheel
+	Paint f
+	Offset aload pop m
+	MapUnitLetterFont z
+	Contrast Letter h
+	end
+} bd
+/ArmyTroopBBox [
+	-14.7 -1.4 18.9 12.6
+] def
+/PaintControlledArmy {
+	begin
+	.7 .7 x
+	0 8 t
+	n 0 0 9 0 360 a p % wheel
+	s 6 w Outer k r 2 w Contrast k
+	-20 7 m 10 7 l 10 3 l 14 3 l
+	14 1 l -16 1 l -16 3 l -20 3 l p % barrel
+	4 2 m 24 -8 l 26 -8 l 18 -8 l -2 2 l % carriage
+	s s 6 w Outer k r 2 w Contrast k r Paint f
+	n 0 0 9 0 360 a p % wheel
+	Paint f
+	Offset aload pop m
+	MapUnitLetterFont z
+	Contrast Letter h
+	end
+} bd
+/ControlledArmyTroopBBox [
+	-16.1 -2.8 20.3 14
+] def
+/DrawArmy {
+	SwitchToMapMode
+	s t
+	ArmyTroops Power get execform
+	r
+} bd
+/DrawAlias {
+	SwitchToMapMode
+	s
+	3 1 roll t
+	.7 .7 x
+	0 -14 t
+	MapNameFont z
+	dup stringwidth pop -2 div 0 neg m h
+	r
+} bd
+/DrawName {
+	pop pop pop
+} bd
+/VisitTerritories {
+	1 dict begin
+	/i xd
+	(BER) 250 400 i
+	(CON) 396 217 i
+	(LON) 133 344 i
+	(MOS) 367 344 i
+	(PAR) 104 217 i
+	(ROM) 185 115 i
+	(VIE) 315 115 i
+	end
+} def
+/VisitSupplies {
+	1 dict begin
+	/s xd
+	/BER 250 380 s
+	/MOS 367 324 s
+	/CON 396 197 s
+	/VIE 315 95 s
+	/ROM 185 95 s
+	/PAR 104 197 s
+	/LON 133 324 s
+	end
+} def
+/DrawRemainingCenters {
+	SwitchToMapMode
+	UNOWNED
+	Centers {
+		{ load exec supply } { pop } ifelse
+	} forall
+} bd
+/PaintSupply {
+	begin
+	.7 .7 x
+	Paint
+	n 0 0 6 0 360 a f
+	end
+} bd
+/SupplyCenterBBox [
+	-4.2 -4.2 4.2 4.2
+] def
+/PaintControlledSupply {
+	begin
+	.7 .7 x
+	Outer
+	n 0 0 10 0 360 a f
+	Contrast
+	n 0 0 8 0 360 a f
+	Paint
+	n 0 0 6 0 360 a f
+	end
+} bd
+/ControlledSupplyCenterBBox [
+	-7 -7 7 7
+] def
+/supply {
+	SwitchToMapMode
+	Centers exch false put
+	s t
+	Power get execform
+	r
+} bd
+/SetArrowStateOk {
+	[] 0 d
+} bd
+/OkOrder {
+	/SetArrowState /SetArrowStateOk ld
+} bd
+/SetArrowStateFailed {
+	[4 6] 2 d
+} bd
+/FailedOrder {
+	/SetArrowState /SetArrowStateFailed ld
+} bd
+/MovePhase {
+	/ArrowColor /ArrowBlack ld
+	/ArrowBase 20 def
+	/TraceArrowHead /TraceSingleArrowHead ld
+	InTextMode not { ArrowColor } if
+} bd
+/RetreatPhase {
+	/ArrowColor /ArrowRed ld
+	/ArrowBase 39.8 def
+	/TraceArrowHead /TraceDoubleArrowHead ld
+	InTextMode not { ArrowColor } if
+} bd
+/ProposePhase {
+	/ArrowColor /ArrowWhite ld
+	/ArrowBase 39.8 def
+	/TraceArrowHead /TraceDoubleArrowHead ld
+	InTextMode not { ArrowColor } if
+} bd
+/TraceSingleArrowHead {
+	% draw the arrow head ...
+	n
+	dup -5 m
+	dup 20 add 0 l
+	dup 5 l
+	p
+} bd
+/TraceDoubleArrowHead {
+	% draw the double arrow head ...
+	n
+	dup -5 m
+	dup 19.8 add
+	dup -1 l
+	dup -5 l
+	dup 20 add 0 l
+	dup 5 l
+	1 l
+	dup 5 l
+	p
+} bd
+/PaintArrowMove {
+	s
+	3 index 3 index t
+	3 2 roll sub 3 1 roll exch sub exch
+	2 copy dup mul exch dup mul add sqrt 3 1 roll exch secure_atan
+	.7 .7 x
+	0 8 t
+	o
+	.7 div ArrowBase sub
+	% if base of arrow is long enough, shorten it enough
+	% to e.g. move arrow start beyond support circle
+	dup 14 gt {
+		14 14 0 t sub
+	} {
+		0 t 0
+	} ifelse
+	% if base is still too long, shorten it some more
+	% to make arrow head touch support circle
+	dup 14 gt {
+		14 sub
+	} {
+		pop 0
+	} ifelse
+	1 w
+	TraceArrowHead
+	k
+	% now the shaft ...
+	2 w
+	0 0 m
+	0 l
+	k
+	r
+} bd
+/PaintArrowCircle {
+	s
+	5 1 roll
+	3 index 3 index t
+	3 2 roll sub 3 1 roll exch sub exch
+	2 copy dup mul exch dup mul add sqrt 3 1 roll exch secure_atan
+	.7 .7 x
+	0 8 t
+	o
+	.7 div
+	1 index sub
+	% if base of arrow is long enough, shorten it enough
+	% to e.g. move arrow start beyond support circle
+	dup 14 gt {
+		14 14 0 t sub
+	} {
+		0 t 0
+	} ifelse
+	% draw the circle ...
+	1 w
+	n
+	2 copy add 0 4 3 roll 0 360 a
+	p k
+	% now the shaft ...
+	2 w
+	0 0 m
+	0 l
+	k
+	r
+} bd
+/PaintArrowArrive {
+	s
+	t
+	.7 .7 x
+	0 8 t
+	180 rotate 54 ArrowBase add neg 0 t
+	40
+	1 w
+	TraceArrowHead
+	k
+	% now the shaft ...
+	2 w
+	0 0 m
+	0 l
+	k
+	-5 0 m -10 0 l
+	-15 0 m -20 0 l
+	k
+	r
+} bd
+/PaintArrowDepart {
+	s
+	t
+	.7 .7 x
+	0 8 t
+	-54 0 t
+	40
+	2 w
+	0 0 m
+	0 l
+	-6 0 m -10 0 l
+	-16 0 m -20 0 l
+	k
+	r
+} bd
+/ArrowMove {
+	SwitchToMapMode
+	s
+	SetArrowState
+	PaintArrowMove
+	r
+} bd
+/ArrowHold {
+	SwitchToMapMode
+	s
+	SetArrowState
+	24 PaintArrowCircle
+	r
+} bd
+/ArrowSupport {
+	SwitchToMapMode
+	s
+	SetArrowState
+	center
+	8 PaintArrowCircle
+	r
+} bd
+/ArrowConvoy {
+	SwitchToMapMode
+	s
+	SetArrowState
+	center
+	12 PaintArrowCircle
+	r
+} bd
+/ArrowArrive {
+	SwitchToMapMode
+	s
+	SetArrowState
+	PaintArrowArrive
+	r
+} bd
+/ArrowDepart {
+	SwitchToMapMode
+	s
+	SetArrowState
+	PaintArrowDepart
+	r
+} bd
+/ArrowRetreat {
+	RetreatPhase
+	ArrowMove
+	MovePhase
+} bd
+/ArrowPropose {
+	ProposePhase
+	ArrowMove
+	MovePhase
+} bd
+/ArrowRetreatArrive {
+	RetreatPhase
+	ArrowArrive
+	MovePhase
+} bd
+/ArrowRetreatDepart {
+	RetreatPhase
+	ArrowDepart
+	MovePhase
+} bd
+/BuildUnit {
+	SwitchToMapMode
+	s
+	t
+	ArrowWhite
+	.7 .7 x
+	0 8 t
+	6 w [ 3.14 6.28 ] 1.57 d
+	n
+	0 0 24 0 360 a
+	p k
+	r
+} bd
+/SlashUnit {
+	s
+	3 1 roll t
+	.7 .7 x
+	0 8 t
+	n
+	-21 -16 m
+	11 16 l
+	21 16 l
+	-11 -16 l
+	p
+	exec
+	r
+} bd
+/DestroyUnit {
+	SwitchToMapMode
+	{ ArrowRed f } SlashUnit
+} bd
+/DisbandUnit {
+	SwitchToMapMode
+	{ s ArrowWhite f r 1 w ArrowRed k } SlashUnit
+} bd
+/RemoveUnit {
+	SwitchToMapMode
+	{ ArrowWhite f } SlashUnit
+} bd
+/FindUnit {
+	SwitchToMapMode
+	s
+	t
+	ArrowBlue
+	.7 .7 x
+	0 8 t
+	6 w [ 3.14 6.28 ] 1.57 d
+	n
+	0 0 24 0 360 a
+	p k
+	r
+} bd
+/LoseUnit {
+	SwitchToMapMode
+	s
+	t
+	ArrowBlue
+	.7 .7 x
+	0 8 t
+	4 w
+	-12 4 m
+	-8 7 -4 7 0 4 c
+	4 1 8 1 12 4 c
+	-12 -4 m
+	-8 -1 -4 -1 0 -4 c
+	4 -7 8 -7 12 -4 c
+	k
+	r
+} bd
+/QueryUnit {
+	SwitchToMapMode
+	s
+	t
+	ArrowWhite
+	.7 .7 x
+	0 8 t
+	4 w
+	-12 4 m
+	-8 7 -4 7 0 4 c
+	4 1 8 1 12 4 c
+	-12 -4 m
+	-8 -1 -4 -1 0 -4 c
+	4 -7 8 -7 12 -4 c
+	k
+	r
+} bd
+/MapForm <<
+	/FormType 1
+	/Matrix [ 2.1324 0 0 2.1324 22 25 ]
+	/BBox [ 0 0 221.35 204 ]
+	/FormDict 1 dict
+	/PaintProc {
+		dup /Matrix get exch /FormDict get begin
+		s
+		matrix invertmatrix concat
+		SeaBlue 22 25 472 435 rectfill
+		IncludeRays
+		IncludeCore
+		IncludeIslands
+		r
+		end
+	} bind
+>> def
+/DrawMap {
+	PageSetup
+	SwitchToMapMode
+	MapForm execform
+	/Centers << Centers { pop true } forall >> def
+	UNOWNED
+} bd
+/DrawSupplies {
+	SwitchToMapMode
+	UNOWNEDCENTER
+	{ SupplyCenters 3 1 roll 4 3 roll supply } bind
+	VisitSupplies
+} bd
+/DrawAliases {
+	NameTerritories
+} bd
+/NameTerritories {
+	SwitchToMapMode
+	s
+	{ DarkGreen 3 2 roll DrawAlias } bind
+	VisitTerritories
+	r
+} bd
+/GetControlledPower {
+	1 index dup length string cvs 1 index dup length string cvs
+	1 index length dup 2 index length add 1 add string
+	dup 0 6 5 roll putinterval dup 2 index 124 put dup 3 2 roll 1 add 4 3 roll putinterval cvn
+	3 1 roll Powers 3 index known {
+		pop pop
+	} {
+		8 dict dup begin
+		exch Powers exch get /Paint get /Outer xd
+		Powers 2 index get { def } forall
+		end
+		dup ControlledFleetTroopBBox /PaintControlledFleet load CreateTroop FleetTroops 4 index 3 2 roll put
+		dup ControlledArmyTroopBBox /PaintControlledArmy load CreateTroop ArmyTroops 4 index 3 2 roll put
+		dup ControlledSupplyCenterBBox /PaintControlledSupply load CreateTroop SupplyCenters 4 index 3 2 roll put
+		Powers 2 index 3 2 roll put
+		[ /Power 3 index 4 3 roll {
+			ChangeController {
+				Power GetControlledPower exch
+				/ChangeController false def
+			} if pop
+		} bind /exec load /def load ] cvx 2 index xd
+	} ifelse
+} bd
+/Controls {
+	/ChangeController true def
+} bd
+/CreateTroop {
+	<<
+		/BBox 4 3 roll
+		/PaintProc 5 4 roll
+		6 5 roll {} forall
+		/FormType 1
+		/Matrix matrix
+	>>
+} bd
+/CreateTroops {
+	<< 3 1 roll Powers {
+		3 index 3 index CreateTroop 4 2 roll
+	} forall pop pop >>
+} bd
+/SplitString {
+	7 dict begin
+	/nrChars xd
+	/indentString xd
+	/objectString xd
+	/objectLast objectString length 1 sub def
+	% Short string?
+	objectLast nrChars lt {
+		false objectString
+	} {
+		% Look for a suitable place to split.
+		% First tracking backwards, if that doesn't work, look forward.
+		/splitIndex -1 def
+		nrChars -1 0 {
+			objectString 1 index get 32 eq {
+				/splitIndex xd exit
+			} if pop
+		} for splitIndex -1 eq {
+			nrChars 1 add 1 objectLast {
+				objectString 1 index get 32 eq {
+					/splitIndex xd exit
+				} if pop
+			} for
+		} if
+		splitIndex -1 eq splitIndex objectLast eq or {
+			false objectString
+		} {
+			% The first part.
+			objectString 0 splitIndex getinterval
+			% The second part.
+			objectString splitIndex 1 add objectLast splitIndex sub getinterval
+			% Add indentation if needed.
+			indentString length 0 gt {
+				dup length indentString length add string
+				dup 0 indentString putinterval
+				dup indentString length 4 3 roll putinterval
+			} if
+			% Add white space of the first part.
+			/nonSpaceIndex objectLast 1 add def
+			0 1 objectLast {
+				objectString 1 index get 32 ne {
+					/nonSpaceIndex xd exit
+				} if pop
+			} for
+			nonSpaceIndex 0 gt nonSpaceIndex splitIndex lt and {
+				dup length nonSpaceIndex add string
+				dup 0 objectString 0 nonSpaceIndex getinterval putinterval
+				dup nonSpaceIndex 4 3 roll putinterval
+			} if
+			exch true exch
+		} ifelse
+	} ifelse
+	end
+} bd
+/DrawLayoutBorders {
+	s
+	TextFixedFont 12 y z
+	r
+} bd
+/Owner <<
+	/Steps [
+		{ /Count 0 def /Y 147.36 def false true } bind
+		{
+			Count 9 ge { false true } {
+				65 SplitString
+				/Count Count 1 add def /Y Y 12 sub def
+				21.6 Y m h
+				true false
+			} ifelse
+		} bind
+		{
+			65 SplitString [ exch {
+				21.6 27.36 m h
+			} /exec load ] cvx /Finish xd
+			true true
+		} bind
+		{
+			/Count 1 def /Finish {
+				21.6 27.36 m (... \() h
+				Count dup 1 add log iceiling string cvs h
+				( more\)) h
+			} bd false true
+		} bind
+		{ /Count Count 1 add def 65 SplitString pop true false } bind
+	]
+	/Start {
+		TextFixedFont 12 y z
+		/StepIndex 0 def
+		/Step Steps 0 get def
+		/Finish { } def
+	} bind
+	/Write {
+		(  ) {
+			Step {
+				/StepIndex StepIndex 1 add def
+				/Step Steps StepIndex get def
+			} if { not { exit } if () } if
+		} loop
+	} bind
+>> def
+/OwnerReport {
+	SwitchToTextMode
+	Owner begin Start end
+	/FinishReport /FinishOwnerReport load def
+} bd
+/WriteOwner {
+	Owner begin Write end
+} bd
+/FinishOwnerReport {
+	Owner begin Finish end
+} bd
+/Adjustment <<
+	/Steps [
+		{ /Count 0 def /Y 171.36 def false true } bind
+		{
+			Count 11 ge { false true } {
+				37 SplitString
+				/Count Count 1 add def /Y Y 12 sub def
+				504 Y m h
+				true false
+			} ifelse
+		} bind
+		{
+			37 SplitString [ exch {
+				504 27.36 m h
+			} /exec load ] cvx /Finish xd
+			true true
+		} bind
+		{
+			/Count 1 def /Finish {
+				504 27.36 m (... \() h
+				Count dup 1 add log iceiling string cvs h
+				( more\)) h
+			} bd false true
+		} bind
+		{ /Count Count 1 add def 37 SplitString pop true false } bind
+	]
+	/Start {
+		TextHeadingFont 12 y z
+		504 171.36 moveto
+		(Adjustments) h
+		TextFixedFont 12 y z
+		/StepIndex 0 def
+		/Step Steps 0 get def
+		/Finish { } def
+	} bind
+	/Write {
+		(  ) {
+			Step {
+				/StepIndex StepIndex 1 add def
+				/Step Steps StepIndex get def
+			} if { not { exit } if () } if
+		} loop
+	} bind
+>> def
+/AdjustReport {
+	SwitchToTextMode
+	Adjustment begin Start end
+	/FinishReport /FinishAdjustReport load def
+} bd
+/WriteAdjust {
+	Adjustment begin Write end
+} bd
+/FinishAdjustReport {
+	Adjustment begin Finish end
+} bd
+/Retreat <<
+	/Steps [
+		{ /Count 0 def /Y 291.36 def false true } bind
+		{
+			Count 8 ge { false true } {
+				37 SplitString
+				/Count Count 1 add def /Y Y 12 sub def
+				504 Y m h
+				true false
+			} ifelse
+		} bind
+		{
+			37 SplitString [ exch {
+				504 183.36 m h
+			} /exec load ] cvx /Finish xd
+			true true
+		} bind
+		{
+			/Count 1 def /Finish {
+				504 183.36 m (... \() h
+				Count dup 1 add log iceiling string cvs h
+				( more\)) h
+			} bd false true
+		} bind
+		{ /Count Count 1 add def 37 SplitString pop true false } bind
+	]
+	/Start {
+		TextHeadingFont 12 y z
+		504 291.36 moveto
+		(Retreats) h
+		TextFixedFont 12 y z
+		/StepIndex 0 def
+		/Step Steps 0 get def
+		/Finish { } def
+	} bind
+	/Write {
+		(  ) {
+			Step {
+				/StepIndex StepIndex 1 add def
+				/Step Steps StepIndex get def
+			} if { not { exit } if () } if
+		} loop
+	} bind
+>> def
+/RetreatReport {
+	SwitchToTextMode
+	Retreat begin Start end
+	/FinishReport /FinishRetreatReport load def
+} bd
+/WriteRetreat {
+	Retreat begin Write end
+} bd
+/FinishRetreatReport {
+	Retreat begin Finish end
+} bd
+/Order <<
+	/Steps [
+		{ /Count 0 def /Y 531.36 def false true } bind
+		{
+			Count 18 ge { false true } {
+				37 SplitString
+				/Count Count 1 add def /Y Y 12 sub def
+				504 Y m h
+				true false
+			} ifelse
+		} bind
+		{
+			37 SplitString [ exch {
+				504 303.36 m h
+			} /exec load ] cvx /Finish xd
+			true true
+		} bind
+		{
+			/Count 1 def /Finish {
+				504 303.36 m (... \() h
+				Count dup 1 add log iceiling string cvs h
+				( more\)) h
+			} bd false true
+		} bind
+		{ /Count Count 1 add def 37 SplitString pop true false } bind
+	]
+	/Start {
+		TextFixedFont 12 y z
+		/StepIndex 0 def
+		/Step Steps 0 get def
+		/Finish { } def
+	} bind
+	/Write {
+		(  ) {
+			Step {
+				/StepIndex StepIndex 1 add def
+				/Step Steps StepIndex get def
+			} if { not { exit } if () } if
+		} loop
+	} bind
+>> def
+/OrderReport {
+	SwitchToTextMode
+	Order begin Start end
+	/FinishReport /FinishOrderReport load def
+} bd
+/WriteOrder {
+	Order begin Write end
+} bd
+/FinishOrderReport {
+	Order begin Finish end
+} bd
+/DrawTitle {
+	SwitchToTextMode
+	TextTitleFont 36 y z
+	(Diplomacy)
+	504 562.08 m h
+	TextTitleFont 24 y z
+	dup stringwidth pop dup 266.4 gt {
+		504 528 m
+		266.4 exch div dup 1 x exch
+		0 6.72 rmoveto h
+		1 exch div 1 x
+	} {
+		pop 504 534.72 m h
+	} ifelse
+} bd
+/SwitchToTextMode {
+	InTextMode {
+		FinishReport /FinishReport { } def
+	} {
+		r /InTextMode true def
+	} ifelse
+} bd
+/SwitchToMapMode {
+	InTextMode {
+		FinishReport /FinishReport { } def
+		/InTextMode false def
+		s
+		27.6 162 456 420 rectclip .9788 .9788 x 3.13 137.55 t
+		ArrowColor
+		OkOrder
+	} if
+} bd
+/FrameMap {
+	s
+	2 w LandBrown
+	24.6 159.11 m 486.6 159.11 l 486.6 584.89 l 24.6 584.89 l
+	p
+	s 8 w Black k r
+	clipsave clip k cliprestore
+	r
+} bd
+/IncludeRays {
+	s
+	/fk { k } bd
+	2.5 w [ 3 3 ] 1.5 d BorderBlack
+	ShapeRays
+	r
+} bd
+/IncludeCore {
+	s
+	/fk {
+		p
+		s SeaBlue f r
+		k
+	} bd
+	2.5 w [ 3 3 ] 1.5 d BorderBlack
+	ShapeCore
+	r
+} bd
+/IncludeIslands {
+	s
+	/fk {
+		p
+		s LandBrown f r
+		k
+	} bd
+	2.5 w BorderBlack
+	ShapeIslands
+	r
+} bd
+/ShapeRays {
+	250 250 m
+	250 400 l
+	250 250 m
+	367 344 l
+	250 250 m
+	396 217 l
+	250 250 m
+	315 115 l
+	250 250 m
+	185 115 l
+	250 250 m
+	104 217 l
+	250 250 m
+	133 344 l
+	fk
+} bd
+/ShapeCore {
+	285 250 m 250 250 35 0 360 a
+	fk
+} bd
+/ShapeIslands {
+	285 400 m 250 400 35 0 360 a
+	402 344 m 367 344 35 0 360 a
+	431 217 m 396 217 35 0 360 a
+	350 115 m 315 115 35 0 360 a
+	220 115 m 185 115 35 0 360 a
+	139 217 m 104 217 35 0 360 a
+	168 344 m 133 344 35 0 360 a
+	fk
+} bd
+{
+	currentdict end 3 1 roll [ exch /setgray load ] cvx def begin
+}{
+	currentdict end 5 1 roll [ 4 1 roll /setrgbcolor load ] cvx def begin
+}{
+	currentdict end 6 1 roll [ 5 1 roll /setcmykcolor load ] cvx def begin
+} bind VisitColors
+/ChangeController false def
+s
+MapUnitLetterFont z
+{
+	exch load exch load
+	2 index [ exch n 0 0 m true charpath pathbbox 3 2 roll add -2 div 3 1 roll add -2 div exch ] 3 1 roll
+	4 dict begin /Contrast xd /Paint xd /Offset xd /Letter xd currentdict end
+	currentdict end 3 1 roll
+	Powers 2 index 3 2 roll put
+	[ /Power 2 index {
+		ChangeController {
+			Power GetControlledPower
+			/ChangeController false def
+		} if
+	} bind /exec load /def load ] cvx def
+	begin
+} VisitPowers
+r
+/FleetTroops FleetTroopBBox /PaintFleet load CreateTroops def
+/ArmyTroops ArmyTroopBBox /PaintArmy load CreateTroops def
+/Centers <<
+	{ pop pop true } bind
+	VisitSupplies
+>> def
+/SupplyCenters SupplyCenterBBox /PaintSupply load CreateTroops def
+{ currentdict end 4 1 roll [ SupplyCenters 4 2 roll 4 index ] cvx def begin } bind
+VisitSupplies
+/UNOWNEDCENTER /UNOWNED ld
+/ENGLANDCENTER /ENGLAND ld
+/FRANCECENTER /FRANCE ld
+/GERMANYCENTER /GERMANY ld
+/RUSSIACENTER /RUSSIA ld
+/TURKEYCENTER /TURKEY ld
+/AUSTRIACENTER /AUSTRIA ld
+/ITALYCENTER /ITALY ld
+%%EndSetup
