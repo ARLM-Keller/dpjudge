@@ -284,7 +284,7 @@ class Power:
 		return not self.type and self.player and (
 			self.isDummy() and (
 				not self.ceo and 'CD_DUMMIES' in game.rules or (
-					after > 0 or after == 0 and game.deadline <= game.Time() and (
+					after > 0 or after == 0 and game.deadline <= Time() and (
 						not self.ceo or game.graceExpired()
 					)
 				) and (
@@ -294,7 +294,7 @@ class Power:
 				)
 			) or
 			not self.isResigned() and (
-				after > 0 or after == 0 and game.deadline <= game.Time() and
+				after > 0 or after == 0 and game.deadline <= Time() and
 				game.graceExpired()
 			) and
 			'CIVIL_DISORDER' in game.rules and
