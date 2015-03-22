@@ -285,8 +285,9 @@ class Procmail:
 		#	requires registration -- need to ask the DPPD for an ID.
 		#	---------------------------------------------------------
 		#	Need to use query string rather than POST it.  Don't know why.
-		query = '?&'['?' in host.dppdURL]
-		page = urllib.urlopen(host.dppdURL + query +
+		dppdURL = host.dppdURL.split(',')[0]
+		query = '?&'['?' in dppdURL]
+		page = urllib.urlopen(dppdURL + query +
 			'page=whois&email=' + urllib.quote(self.email, '@'))
 		response = unicode(page.read(), 'latin-1')
 		page.close()
@@ -295,7 +296,7 @@ class Procmail:
 			'Your e-mail address (%s) is\nnot registered with the DPPD, '
 			'or your DPPD status does\nnot allow you to use the %s command.'
 			'\n\nVisit the DPPD at %s\nfor assistance' %
-			(self.email, command, host.dppdURL))
+			(self.email, command, dppdURL))
 	#	----------------------------------------------------------------------
 	def updatePlayer(self, power, password, command, word):
 		game, self.power, playerType = self.game, None, None
@@ -451,20 +452,22 @@ class Procmail:
 			if command == 'JOIN':
 				avail = game.available()
 				if not avail:
-					if 'START_MASTER' in game.rules:
+					if 'START_MASTER' not in game.rules:
 						responding = game.begin()
 						if responding: game.mailPress(None, ['MASTER'],
-							'The game cannot start yet because ' +
-							(self.error and  'the following error%s exist%s:\n\t' %
+							'The game cannot start yet because ' + (self.error
+							and 'the following error%s exist%s:\n\t' %
 							[('s', ''), ('', 's')][len(self.error) == 1] +
-							'\n\t'.join(self.error) + '\n\nResolve this first, then '
-							or 'the status is not forming. To begin ') +
+							'\n\t'.join(self.error) +
+							'\n\nResolve this first, then ' or
+							'the status is not forming. To begin ') +
 							'change the game status to active.',
 							subject = 'Diplomacy game %s full' % game.name)
-					game.mailPress(None, ['All!'],
-						'All positions are filled, but you need to wait ' +
-						'for the Master to activate the game.',
-						subject = 'Diplomacy game %s full' % game.name)
+					if responding is not None:
+						game.mailPress(None, ['All!'],
+							'All positions are filled, but you need to wait ' +
+							'for the Master to activate the game.',
+							subject = 'Diplomacy game %s full' % game.name)
 				elif playerType == 'POWER' and not 'SILENT_JOIN' in game.rules:
 					game.mailPress(None, ['All!'],
 						'%s has joined the game. %s %d position%s left.' %
@@ -588,7 +591,7 @@ class Procmail:
 				if claimFrom == '(WHITE)': claimFrom = None
 				if power.name != 'MASTER':
 					late = game.latePowers()
-					if (game.deadline and game.deadline <= Game.Time()
+					if (game.deadline and game.deadline <= Time()
 					and ('LATE_SEND' not in game.rules
 					or	'NO_LATE_RECEIVE' in game.rules
 					or	'FTF_PRESS' in game.rules)
@@ -740,7 +743,7 @@ class Procmail:
 					if param in ('RESTORE', 'RECOVER'): flags |= 1
 					elif param == 'FULL': flags |= 2
 					else: phase = param
-				error = game.rollback(flags, phase)
+				error = game.rollback(phase, flags)
 				if error: self.respond(error)
 				self.response += ['Game rolled back to ' + game.phase]
 			#	---------------------------------
@@ -754,7 +757,7 @@ class Procmail:
 					if param in ('RESTORE', 'RECOVER'): flags |= 1
 					elif param == 'FULL': flags |= 2
 					else: phase = param
-				error = game.rollforward(flags, phase)
+				error = game.rollforward(phase, flags)
 				if error: self.respond(error)
 				self.response += ['Game rolled forward to ' + game.phase]
 			#	--------------------------------------------------------
@@ -813,19 +816,26 @@ class Procmail:
 					if (word[1][0] == 'D' and power.name != 'MASTER'
 					and 'PLAYER_DEADLINES' not in game.rules):
 						self.respond('Only the Master can SET %s' % word[1])
-					now, dates, oldline = time.localtime(), [word[2:]], 0
+					if word[2] in ['TO', 'ON', 'FROM'][
+					word[1][0] == 'A':3 - (word[1][0] == 'D')]: del word[2]
+					word = [x for x in word if x != 'AT']
+					now, dates, oldline = Time(npar=6), [word[2:]], None
 					if word[1][0] == 'A' and 'TO' in word:
 						where = word.index('TO')
 						if where == 2: dates = [word[3:]]
 						else: dates = word[2:where], word[where + 1:]
 					for date in dates:
 						try:
-							if len(date) == 2 or ':' in date[2]:
-								date[2:2] = [`now[0]`]
-							if (len(date) == 3 and 'AT' in game.timing
-							and word[1][0] == 'D'): date += [game.timing['AT']]
-							newline = time.strptime(' '.join(date),
-								' '.join(('%d %b %Y', '%H:%M')[:len(date) - 2]))
+							if len(date) == 1 and ':' in date[0]:
+								newline = Time(now[:8] +
+									time.strptime(date[0], '%H:%M'))
+							else:
+								if len(date) == 2 or ':' in date[2]:
+									date[2:2] = [now[:4]]
+								if (len(date) == 3 and 'AT' in game.timing
+								and word[1][0] == 'D'): date += [game.timing['AT']]
+								newline = Time(time.strptime(' '.join(date),
+									' '.join(('%d %b %Y', '%H:%M')[:len(date) - 2])))
 							if not oldline: oldline = newline
 						except: self.respond('Bad %s specified' % word[1])
 					if word[1][0] == 'D':
@@ -834,9 +844,8 @@ class Procmail:
 						#	------------
 						if game.phase in ('FORMING', 'COMPLETED'): self.respond(
 							'DEADLINE cannot be set on an inactive game')
-						if now > newline: self.respond(
+						if now.seconds() > newline.seconds(): self.respond(
 							'DEADLINE has already past: ' + ' '.join(word[2:]))
-						newline = '%4d%02d%02d%02d%02d' % newline[:5]
 						if (power.name != 'MASTER'
 						and newline < game.deadline): self.respond(
 							'Only the Master may shorten a deadline')
@@ -853,17 +862,17 @@ class Procmail:
 						#	-----------
 						#	SET ABSENCE
 						#	-----------
-						nope, format, length = '', '%4d' + '%02d' * 4, 0
+						nope, length = '', 0
 						if len(dates) > 1:
-							nope = format % oldline[:5]
+							nope = Time(oldline)
 							while nope[-2:] == '00': nope = nope[:-2]
-							length = time.mktime(newline) - time.mktime(oldline)
-						if (length < 0 or newline < time.localtime()
+							length = newline.seconds() - oldline.seconds()
+						if (length < 0 or newline.seconds() < now.seconds()
 						or	power.name != 'MASTER' and len(dates) > 1
 						and length > 14 * 24 * 60 * 60):
 							self.respond('Invalid ABSENCE duration')
 						if 'TO' in word: nope += '-'
-						nope += format % newline[:5]
+						nope += Time(newline)
 						while nope[-2:] == '00': nope = nope[:-2]
 						game.setAbsence(power, nope, line)
 				elif len(word) > 3: self.respond('Bad %s syntax' % word[1])
@@ -873,7 +882,7 @@ class Procmail:
 				elif word[1][0] in 'NW':
 					if power.name == 'MASTER':
 						self.respond('MASTER has no WAIT flag')
-					if game.await or game.deadline < Game.Time():
+					if game.await or game.deadline < Time():
 						self.respond('WAIT unavailable after deadline')
 					if power.isEliminated():
 						self.respond('WAIT unavailable; no orders required')

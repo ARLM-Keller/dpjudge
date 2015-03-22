@@ -41,6 +41,7 @@ class Power:
 		#	---------------------------------------------
 		#	Reinitializes the power specific data.
 		#   Relevant bit values for includeFlags:
+		#		1: include orders
 		#		2: include persistent data
 		#		4: include transient data
 		#	---------------------------------------------
@@ -56,10 +57,17 @@ class Power:
 		#	Initialize the transient parameters
 		#	-----------------------------------
 		if includeFlags & 4:
-			wait = balance = homes = vote = None
-			held = goner = cd = 0
-			centers, units, adjust, ceo = [], [], [], []
+			balance = homes = None
+			centers, units, ceo = [], [], []
 			retreats, funds, sees, hides = {}, {}, [], []
+		#	---------------------------------------
+		#	Initialize the order-related parameters
+		#	---------------------------------------
+		if includeFlags & 5:
+			wait = vote = None
+			cd = 0
+			adjust = []
+		held = goner = 0
 		vars(self).update(locals())
 	#	----------------------------------------------------------------------
 	def compare(self, other):
@@ -75,7 +83,9 @@ class Power:
 		elif 'BLANK_BOARD' in game.rules:
 			if not self.centers:
 				self.centers = game.map.centers.get(self.name, [])
-				self.units = self.units or [x for x in game.map.units.get(self.name, []) if x[2:5] not in self.centers]
+				self.units = self.units or [x for x in
+					game.map.units.get(self.name, []) if x[2:5] not in
+					self.centers]
 		else: 
 			self.centers = self.centers or game.map.centers.get(self.name, [])
 			self.units = self.units or game.map.units.get(self.name, [])
@@ -274,7 +284,7 @@ class Power:
 		return not self.type and self.player and (
 			self.isDummy() and (
 				not self.ceo and 'CD_DUMMIES' in game.rules or (
-					after > 0 or after == 0 and game.deadline <= game.Time() and (
+					after > 0 or after == 0 and game.deadline <= Time() and (
 						not self.ceo or game.graceExpired()
 					)
 				) and (
@@ -284,7 +294,7 @@ class Power:
 				)
 			) or
 			not self.isResigned() and (
-				after > 0 or after == 0 and game.deadline <= game.Time() and
+				after > 0 or after == 0 and game.deadline <= Time() and
 				game.graceExpired()
 			) and
 			'CIVIL_DISORDER' in game.rules and
