@@ -7,14 +7,9 @@ from Status import Status
 from Power import Power
 from Mail import Mail
 from View import View
+from Time import Time
 
 class Game:
-	#	----------------------------------------------------------------------
-	class Time(str):
-		#	------------------------------------------------------------------
-		def __new__(self, when = 0):
-			return str.__new__(self, '%02d'*5 % (when or time.localtime())[:5])
-		#	------------------------------------------------------------------
 	#	----------------------------------------------------------------------
 	def __init__(self, name = '', fileName = 'status'):
 		if 'variant' not in vars(self): variant = ''
@@ -29,6 +24,7 @@ class Game:
 		text = ('GAME ' + self.name + (self.await == 2 and '\nWAIT '
 				or self.await and '\nAWAIT '
 				or self.skip and '\nSKIP ' or '\nPHASE ') + self.phase)
+		if self.judge: text += '\nJUDGE ' + self.judge
 		if self.map: text += '\n%s ' % (
 			['MAP', 'TRIAL'][self.map.trial]) + self.map.name
 		if len(self.morphs) > 3 or [1 for x in self.morphs if not x.strip()]:
@@ -69,6 +65,7 @@ class Game:
 		if self.deadline: text += '\nDEADLINE ' + self.deadline
 		if self.zone: text += '\nZONE ' + self.zone
 		if self.delay: text += '\nDELAY %d' % self.delay
+		if self.processed: text += '\nPROCESSED ' + self.processed
 		if self.timing:
 			text += '\nTIMING ' + ' '.join(map(' '.join, self.timing.items()))
 		for terrain, changes in self.terrain.items():
@@ -117,7 +114,7 @@ class Game:
 			outcome, error, state = [], [], {}
 			end = phase = ''
 			mail = proposal = season = year = phaseType = None
-			mode = preview = deadline = delay = win = await = skip = None
+			mode = preview = deadline = delay = processed = win = await = skip = None
 			modeRequiresEnd, includeOwnership = None, -1
 
 		vars(self).update(locals())
@@ -672,6 +669,7 @@ class Game:
 				elif (not self.parsePowerData(power, word, includeFlags)
 				and includeFlags & 7 == 7):
 					error += ['UNRECOGNIZED POWER DATA: ' + ' '.join(word)]
+		file.close()
 		if blockMode == 1:
 			self.finishGameData() 
 		elif blockMode == 3:
@@ -737,9 +735,10 @@ class Game:
 					else: self.phase = ' '.join(word[1:]).upper()
 			elif upword == 'DEADLINE':
 				if self.deadline: error += ['TWO DEADLINES']
-				elif (len(word) == 2 and word[1].isdigit()
-				and len(word[1]) == 12): self.deadline = word[1]
-				else: error += ['BAD DEADLINE: ' + ' '.join(word[1:])]
+				else:
+					self.deadline = Time(' '.join(word[1:]))
+					if not self.deadline:
+						error += ['BAD DEADLINE: ' + ' '.join(word[1:])]
 			elif upword == 'DELAY':
 				if self.delay: error += ['TWO DELAYS']
 				elif len(word) != 2: error += ['BAD DELAY']
@@ -748,6 +747,12 @@ class Game:
 						self.delay = int(word[1])
 						if not (0 < self.delay < 73): raise
 					except: error += ['BAD DELAY COUNT: ' + word[1]]
+			elif upword == 'PROCESSED':
+				if self.processed: error += ['TWO PROCESSED TIMES']
+				else:
+					self.processed = Time(' '.join(word[1:]))
+					if not self.processed:
+						error += ['BAD PROCESSED TIME: ' + ' '.join(word[1:])]
 			else:
 				found = 0
 				if upword == 'RESULT':
@@ -820,6 +825,9 @@ class Game:
 					if self.map and includeFlags & 8:
 						if item not in self.map.rules: self.map.rules += [item]
 						if item not in self.metaRules: self.metaRules += [item]
+			elif upword == 'JUDGE':
+				if self.judge: error += ['TWO JUDGE STATEMENTS']
+				else: self.judge = ' '.join(word[1:])
 			elif upword in ['MAP', 'TRIAL']:
 				if self.map: error += ['TWO MAP STATEMENTS']
 				elif len(word) == 2: self.loadMap(word[1], upword == 'TRIAL')
@@ -1378,7 +1386,9 @@ class Game:
 	#	----------------------------------------------------------------------
 	def save(self, asBackup = 0):
 		fileName = 'status'
-		if asBackup: fileName += '.' + self.phaseAbbr()
+		if asBackup:
+			if not self.processed: self.processed = Time(npar=6)
+			fileName += '.' + self.phaseAbbr()
 		file = open(self.file(fileName), 'w')
 		for x in [self] + self.powers:
 			file.write(unicode(`x`, 'latin-1').encode('latin-1'))
@@ -1396,7 +1406,8 @@ class Game:
 			#	Add a mail-like header
 			#	----------------------
 			lines[:0] = ['From %s %s\nSubject: %s\n\n' %
-				(host.dpjudge, time.ctime(), subject)]
+				(host.resultsFrom, time.ctime(self.processed and
+				self.processed.seconds()), subject)]
 		file = open(self.file('results'), 'a')
 		temp = ''.join(lines)
 		file.write(temp.encode('latin-1'))
@@ -1728,7 +1739,8 @@ class Game:
 						' or '.join(map(self.anglify, option))) or '') + '.']
 				if 'BLIND' in self.rules and not playing: lines += ['SHOW']
 		if 'active' in self.status or 'waiting' in self.status:
-			lines += self.ownership(playing = (None, playing)['BLIND' in self.rules])
+			lines += self.ownership(playing = (None, playing)
+				['BLIND' in self.rules])
 		if not email: return lines
 		phase = self.phase.title().split()
 		if len(phase) > 1:
@@ -1808,7 +1820,8 @@ class Game:
 		lines = ['']
 		blind = 'BLIND' in rules
 		hidden = 'HIDE_DUMMIES' in rules
-		if blind: omnis = ['MASTER'] + [x.name for x in self.powers if x.omniscient]
+		if blind: omnis = ['MASTER'] + [x.name for x in self.powers
+			if x.omniscient]
 		if 'VASSAL_DUMMIES' in rules and (blind or not hidden):
 			lines += ['Vassal status of minor powers:', '']
 			if blind and hidden and playing and playing.name not in omnis:
@@ -1818,8 +1831,8 @@ class Game:
 			else:
 				showing = blind and hidden and not playing
 				for dummy in [x for x in self.powers if x.isDummy()]:
-					if showing: lines += ['SHOW ' + ' '.join(omnis + (dummy.ceo and
-						[x for x in dummy.ceo if x not in omnis] or []))]
+					if showing: lines += ['SHOW ' + ' '.join(omnis + (dummy.ceo
+						and [x for x in dummy.ceo if x not in omnis] or []))]
 					lines += [self.anglify(dummy.name) + (dummy.ceo and
 						' is a vassal of %s.' % self.anglify(dummy.ceo[0]) or
 						' is independent.')]
@@ -1842,8 +1855,10 @@ class Game:
 						for x in centers if x[-1] not in '?*']
 				elif (showing and who != 'UNOWNED'
 				and not who.omniscient and [who.name] != ceo):
+					vassals = [who.name] + [x.name for x in who.vassals()]
 					who.sees += [x for x in centers
-						if x not in who.sees and self.visible(power, x)[who.name] & 2]
+						if x not in who.sees and [1 for y, z in
+						self.visible(power, x).items() if z & 2 and y in vassals]]
 					seen = [x for x in centers if x in who.sees]
 				if not seen: continue
 				if showing:
@@ -2161,7 +2176,7 @@ class Game:
 	#	----------------------------------------------------------------------
 	def ready(self, process = 0):
 		return self.status[1] == 'active' and not self.error and (
-			process == 2 or ((self.deadline and self.deadline <= self.Time())
+			process == 2 or ((self.deadline and self.deadline <= Time())
 			or process or not (self.await > 1 or
 			[1 for power in self.powers if power.wait]
 			or ('ALWAYS_WAIT' in self.rules and (self.phaseType == 'M'
@@ -2272,7 +2287,7 @@ class Game:
 					#	it should delay one cycle before processing
 					#	(if the deadline hasn't passed yet).
 					#	-------------------------------------------
-					self.delay = self.deadline > self.Time()
+					self.delay = self.deadline > Time()
 					return self.save()
 				#	-----------------------------------------
 				#	No deadline.  Process right away.
@@ -3299,8 +3314,10 @@ class Game:
 			#	OR, IF "HOLD_WIN", MUST HAVE HAD A WIN
 			and ('VICTORY_HOMES' in self.rules or centers > lastYear[power],
 			lastYear[power] >= self.win)['HOLD_WIN' in self.rules]
-			#	AND YOU MUST BE ALONE IN THE LEAD (NOT REQUIRED IN CASE OF SHARED_VICTORY)
-			and ('SHARED_VICTORY' in self.rules or (centers, yearCenters.count(centers)) == (max(yearCenters), 1))):
+			#	AND YOU MUST BE ALONE IN THE LEAD (NOT REQUIRED IN CASE OF
+			#	SHARED_VICTORY)
+			and ('SHARED_VICTORY' in self.rules or
+			(centers, yearCenters.count(centers)) == (max(yearCenters), 1))):
 				victors += [power]
 				func = None
 		if victors and not self.preview: self.finish([x.name for x in victors])
@@ -3460,7 +3477,7 @@ class Game:
 		shows, order = {'MASTER': 15}, order or self.command.get(unit, 'H')
 		old = new = unit.split()[-1][:3]
 		if order[0] == '-' and (self.phaseType != 'M'
-		or not self.result.get(unit)): new = order.split()[-1][:3]
+			or not self.result.get(unit)): new = order.split()[-1][:3]
 		rules = self.rules
 		for seer in self.powers:
 			shows[seer.name] = 15 * bool(power is seer or seer.omniscient
@@ -3485,22 +3502,26 @@ class Game:
 					for his in seer.units:
 						if spotters and his[0] not in spotters: continue
 						if (self.command.get(his, 'H')[0] != '-'
-						or self.result.get(his)): after += [his[2:]]
+							or self.result.get(his)): after += [his[2:]]
 						else: after += [self.command[his].split()[-1]]
 				elif self.phaseType == 'R':
 					if 'popped' not in vars(self): self.popped = []
-					after = [x for x in before if x not in
-					[y[2:] for y in seer.retreats.keys()]]
-					for order in seer.adjust:
-						word = order.split()
-						if spotters and word[1][0] not in spotters: continue
-						if word[3][0] == '-' and word[2] not in self.popped:
-							after += [word[-1]]
+					if seer.adjust:
+						after = [x for x in before if x not in
+							[y[2:] for y in seer.retreats.keys()]]
+						for adjusted in seer.adjust:
+							word = adjusted.split()
+							if spotters and word[1][0] not in spotters: continue
+							if word[3][0] == '-' and word[2] not in self.popped:
+								after += [word[-1]]
+					else:
+						after = [x for x in before if x not in
+							[y[2:] for y in self.popped]]
 				elif self.phaseType == 'A':
 					after = [z for z in before if z not in
-					[x[1] for x in [y.split()[1:] for y in seer.adjust]
+						[x[1] for x in [y.split()[1:] for y in seer.adjust]
 					if len(x) > 1]] + [x[1] for x in
-					[y.split()[1:] for y in seer.adjust if y[0] == 'B']
+						[y.split()[1:] for y in seer.adjust if y[0] == 'B']
 					if len(x) > 1 and (not spotters or x[0][0] in spotters)]
 			#	------------------------------------------------
 			#	Get the list of the "seer"s sighted scs (if any)
@@ -3657,6 +3678,7 @@ class Game:
 		#	----------------------
 		for power in self.powers:
 			for unit in filter(self.dislodged.has_key, power.units):
+				power.retreats.setdefault(unit, [])
 				attacker, site = self.dislodged[unit], unit[2:]
 				if self.map.locAbut.get(site): pushee = site
 				else: pushee = site.lower()
@@ -3666,7 +3688,6 @@ class Game:
 					if ((self.abuts(unit[0], site, '-', abut)
 					or	 self.abuts(unit[0], site, '-', where))
 					and not self.combat.get(where) and where != attacker):
-						power.retreats.setdefault(unit, [])
 						#	----------------------------------------
 						#	Armies cannot retreat to specific coasts
 						#	----------------------------------------
@@ -3676,6 +3697,7 @@ class Game:
 		#	--------------------------
 		#	List all possible retreats
 		#	--------------------------
+		destroyed, self.popped = {}, []
 		if self.dislodged:
 			if 'BLIND' in rules: who = (['SHOW', 'MASTER'] +
 				[x.name for x in self.powers if x.omniscient])
@@ -3691,13 +3713,15 @@ class Game:
 					and not power.ceo and ('IMMOBILE_DUMMIES' in rules
 					or 'CD_DUMMIES' in rules > 'CD_RETREATS' in rules)):
 						text += ' was destroyed.'
+						destroyed[unit] = power
+						self.popped += [unit]
 						del self.dislodged[unit]
-						try: del power.retreats[unit]
-						except: pass
 					elif toWhere: text += (' can retreat to %s.' %
 						' or '.join(map(self.anglify, toWhere)))
 					else:
 						text += ' with no valid retreats was destroyed.'
+						destroyed[unit] = power
+						self.popped += [unit]
 						del self.dislodged[unit]
 					#	-----------------------------------------------------
 					#	If this is a BLIND game, add a line before the result
@@ -3729,6 +3753,21 @@ class Game:
 				if self.command[unit][0] == '-' and not self.result[unit]:
 					power.units.remove(unit)
 					power.units += [unit[:2] + self.command[unit].split()[-1]]
+		#	--------------------------------------------------------
+		#	If units were destroyed, other units may go out of sight
+		#	--------------------------------------------------------
+		if destroyed:
+			if 'BLIND' in self.rules:
+				self.phaseType = 'R'
+				for power in self.powers:
+					for unit in power.units:
+						list += self.showLines(power, ['HOLD'] + unit.split(),
+							[])[:-1]
+				list += ['SHOW']
+				self.phaseType = 'M'
+			for unit, power in destroyed.items():
+				try: del power.retreats[unit]
+				except: pass
 		#	------------
 		#	All finished
 		#	------------
@@ -3859,14 +3898,15 @@ class Game:
 		#	----------------------------
 		if 'BLIND' in self.rules:
 			for power in self.powers:
-				for unit in power.units:
-					list += self.showLines(power, ['HOLD'] + unit.split(), [])[:-1]
+				for unit in power.units: list += self.showLines(power,
+					['HOLD'] + unit.split(), [])[:-1]
 		for power in self.powers:
 			for order in power.adjust or []:
 				word = order.split()
 				if 'BLIND' in self.rules:
 					list += self.showLines(power, word, self.popped)
-					if len(word) > 3 and word[-1] == 'HIDDEN': order = order[:-7]
+					if len(word) > 3 and word[-1] == 'HIDDEN':
+						order = order[:-7]
 				elif len(word) > 3 and word[-1] == 'HIDDEN':
 				 	order = word[0] + ' HIDDEN'
 				list += ['%-11s %s.' %
@@ -3882,13 +3922,13 @@ class Game:
 						if sc not in power.centers:
 							power.centers += [sc]
 							self.includeOwnership = 1
-					if ('&SC' in power.homes
-					and sc not in power.homes):
+					if '&SC' in power.homes and sc not in power.homes:
 						power.homes.remove('&SC')
 						power.homes += [sc]
 				elif word[0] == 'REMOVE': power.units.remove(' '.join(word[1:]))
 				elif len(word) == 5:
-					if word[2] in self.popped: list[-1] += '  (*bounce, destroyed*)'
+					if word[2] in self.popped:
+						list[-1] += '  (*bounce, destroyed*)'
 					else: power.units += [word[1] + ' ' + word[-1]]
 			if self.phaseType == 'A':
 				count = len(power.centers) - len(power.units)
@@ -3921,9 +3961,9 @@ class Game:
 		if phase[0] + phase[-1] == 'WA': phase = 'F%sB' % phase[1:-1]
 		return [
 			':: Judge: %s  Game: %s  Variant: %s ' %
-				(host.dpjudgeID, self.name, self.map.name) + self.variant,
+				(host.resultsID, self.name, self.map.name) + self.variant,
 			':: Deadline: %s ' % phase + self.timeFormat(shortForm = 1),
-			':: URL: %s%s?game=' % (host.dpjudgeURL,
+			':: URL: %s%s?game=' % (host.resultsURL,
 				'/index.cgi' * (os.name == 'nt')) + self.name, ''] or []
 	#	----------------------------------------------------------------------
 	def resolvePhase(self):
@@ -3966,7 +4006,11 @@ class Game:
 				(`self.name.encode('latin-1')`,
 				phase[2]) + self.phaseName(form = 1)]
 			if self.deadline:
-				self.setDeadline()
+				if roll:
+					deadline = self.getDeadline('status.' + self.phaseAbbr() + '.0')
+					if deadline: self.deadline = deadline
+					else: self.setDeadline()
+				else: self.setDeadline()
 				broadcast += ['The deadline for orders will be %s.' %
 					self.timeFormat()]
 			#	---------------------------------------------------------
@@ -3998,7 +4042,7 @@ class Game:
 			except: return []
 		votes = filter(None, votes)
 		if not votes or len(votes) > min(votes): return []
-		if len(votes) > 1 and 'NO_DIAS' not in self.rules:
+		if len(votes) == 1 or 'NO_DIAS' not in self.rules:
 			self.proposal = ['DIAS']
 		else:
 			self.proposal = ['NO_DIAS']
@@ -4067,14 +4111,11 @@ class Game:
 		return 1
 	#	----------------------------------------------------------------------
 	def timeFormat(self, shortForm = None):
-		when = self.deadline
 		format = shortForm and ('a', 'b', '%Z') or ('A', 'B', '%Z')
 		if hasattr(host, 'timeZone') and host.timeZone: 
 			format = (format[0], format[1], host.timeZone)
 		try: when = time.strftime('%%%s %%d %%%s %%Y %%H:%%M %s' % format,
-			time.localtime(time.mktime(map(int,
-			(when[:4], when[4:6], when[6:8], when[8:10], when[10:],
-			0, 0, 0, -1))))).split()
+				Time(self.deadline).struct()).split()
 		except:
 			if self.phase == 'FORMING': return ''
 			return 'Invalid Deadline! Notify Master!'
@@ -4088,11 +4129,37 @@ class Game:
 	#	----------------------------------------------------------------------
 	def deadlineExpired(self, grace = '0H'):
 		dict = { 'M': 60, 'H': 3600, 'D': 86400, 'W': 604800 }
-		try: return time.localtime()[:5] >= time.localtime(time.mktime(tuple(
-			map(int, (self.deadline[:4], self.deadline[4:6], self.deadline[6:8],
-			self.deadline[8:10], self.deadline[10:], 0, 0, 0, -1)))) +
-			int(grace[:-1]) * dict.get(grace[-1], 1))[:5]
+		try: return time.localtime()[:5] >= time.localtime(Time(
+			self.deadline).seconds() + int(grace[:-1]) * dict.get(grace[-1], 1))[:5]
 		except: pass
+	#	----------------------------------------------------------------------
+	def getDeadline(self, fileName = 'status'):
+		try: file = open(self.file(fileName), encoding='latin-1')
+		except: return
+		blockMode = 0
+		deadline = mode = None
+		for line in file:
+			word = line.split()
+			if not word:
+				# End of game data?
+				if not mode: break
+				continue
+			upword = word[0].upper()
+			if blockMode == 0:
+				# Start of first block, the game data
+				if upword != 'GAME': return
+				blockMode = 1
+				continue
+			# Game data
+			if (mode and upword == 'END' and len(word) == 2
+				and word[1].upper() == mode): mode = None
+			elif len(word) == 1 and upword in (
+				'DESC', 'DESCRIPTION', 'NAME', 'MORPH'): mode = upword
+			elif len(word) == 2 and upword == 'DEADLINE':
+				deadline = word[1]
+				break
+		file.close()
+		return deadline
 	#	----------------------------------------------------------------------
 	def setDeadline(self, firstPhase = 0):
 		at, days = self.timing.get('AT'), self.timing.get('DAYS', '-MTWTF-')
@@ -4143,12 +4210,12 @@ class Game:
 			#	option to the TIMING line)
 			#	--------------------------
 			outings, moved = self.timing.get('NOT', ''), 0
-			vacations, now = filter(None, outings.split(',')), self.Time()
+			vacations, now = filter(None, outings.split(',')), Time()
 			while vacations:
 				for vacation in vacations:
 					if '-' in vacation: start, end = vacation.split('-')
 					else: start = end = vacation
-					while (start or now) <= self.Time(when)[:len(end)] <= end:
+					while (start or now) <= Time(when)[:len(end)] <= end:
 						next += oneDay
 						when = moved = time.localtime(next)
 					if end < now[:len(end)]:
@@ -4169,10 +4236,10 @@ class Game:
 		#	----------------------------------------------------------------
 		#	Now set the deadline unless it's already set beyond the new time
 		#	----------------------------------------------------------------
-		self.deadline = max(self.deadline, self.Time(when))
+		self.deadline = max(self.deadline, Time(when))
 	#	----------------------------------------------------------------------
 	def canChangeOrders(self, oldOrders, newOrders, proxyOnly = False):
-		if self.deadline and self.deadline <= self.Time() and not self.avail:
+		if self.deadline and self.deadline <= Time() and not self.avail:
 			if not newOrders and not proxyOnly:
 				return self.error.append('ORDERS REQUIRED TO AVOID LATE STATUS')
 			if oldOrders and 'NO_LATE_CHANGES' in self.rules:
@@ -4587,7 +4654,7 @@ class Game:
 		#	orders in (so not the trivial cases, such as uncontrolled dummies or
 		#	virtually eliminated powers).
 		#	----------------------------------------------------------------------
-		late, now = self.latePowers(after), self.Time()
+		late, now = self.latePowers(after), Time()
 		text = ('Diplomacy Game:   %s (%s)\n'
 				'Current Phase:    %s\n' %
 				(self.name, host.dpjudgeID, self.phaseName(form = 2)))
