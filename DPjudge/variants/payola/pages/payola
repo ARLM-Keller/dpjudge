@@ -1,0 +1,155 @@
+<:
+#	----------------------------------------------------------------------
+def showAcceptList():
+	accept = page.power.accept
+	if (not accept or not (page.power.units or page.power.retreats)
+	or ('PAY_DUMMIES' in page.game.rules
+	and 'VASSAL_DUMMIES' not in page.game.rules)
+	or (not page.power.centers and page.game.phaseType == 'A')): return
+	if 'VASSAL_DUMMIES' in page.game.rules and not page.power.vassals(): return
+	page.write('<tr><td align=center class=bodycopy><b>Acceptance List: ')
+	page.write(page.game.await and '<tt>%s</tt></b>' % accept or
+		'</b><input class=inputBox name=accept maxlength=%d size=%d value=%s>' %
+		(len(page.game.map.powers), len(page.game.map.powers) + 2, accept))
+	page.write('</td></tr>')
+#	----------------------------------------------------------------------
+def showPowerData():
+	game, power = page.game, page.power
+	if power.balance is None: return
+	page.write('<td><table border=0 cellpadding=2 cellspacing=2 width=100%>')
+	if not game.await:
+		page.write('<form %s>' % ('onSubmit="return false"',
+		'method=post name=UpdateForm')[page.pwdFlag == 1])
+		hideBack('Update')
+		apprise('balance', power.balance)
+		apprise('phase', game.phaseAbbr())
+	showAcceptList()
+	if game.await:
+		showWaitNotice()
+		return page.write('</table></td>')
+	if game.phaseType == 'M': shown = showOfferList()
+	elif game.phaseType == 'A':
+		showDividends()
+		shown = showAdjustList()
+	elif game.phaseType == 'R': shown = showRetreatList()
+	elif game.phaseType == 'D': shown = showDividends()
+	else: shown = 0
+	if not shown: showWaitNotice()
+	elif game.phaseType != 'M' or power.units: showWaitFlag()
+	if shown or power.accept and power.centers: changeButton()
+	page.write('</table>')
+	page.write('</td>')
+#	----------------------------------------------------------------------
+def showDividends():
+	limit = page.power.dividendLimit()
+	if not limit: return
+	page.write(
+		"""
+		<tr><td align=center class=bodycopy>
+		<b>Fiscal %d Dividends:</b>
+		Disburse <select class=inputBox name=dividend><option>(NMR)
+		""" % page.game.year)
+	for div in range(limit + 1): page.write('<option%s>%d' %
+		(page.power.funds.get('/share') == div and ' selected' or '', div))
+	page.write('</select> AgP per Share</td></tr>')
+	return 1
+#	----------------------------------------------------------------------
+def showOfferList():
+	import json, cgi
+
+	if 'VASSAL_DUMMIES' in page.game.rules and page.power.ceo: return
+	selfControl = 'PAY_DUMMIES' in page.game.rules and not page.power.isDummy()
+	page.write(
+		"""
+		<tr><td class=bodycopy align=center><font size=2>
+		<b>%s %s</b></font><br>
+		""" % (page.game.phaseName(form=2),
+			('Offer List','Orders')[selfControl]))
+	text = page.power.sheet[:] or selfControl and page.power.units or []
+	if 'offers' in vars(page): text = page.offers.split('\012')
+	if selfControl: text = [x[x.startswith('0 : ') * 4:] for x in text]
+	page.write("""
+		<p><input onClick='document.UpdateForm.offers.value = "(NMR)"'
+		type=button value="Clear" class="inputSubmit">
+		""")
+	if text:
+		page.write("""
+			&nbsp;&nbsp;<input onClick='document.UpdateForm.offers.value = %s'
+			type=button value="Revert" class="inputSubmit">
+			""" % json.dumps(text))
+	if not text: text = ['(NMR)']
+	page.write('</p><p><textarea class=inputBox rows=%s cols=40 name=offers wrap=off>'
+			% (max(len(text), 19) + 1))
+	map(page.write, map(cgi.escape, text))
+	page.write('</textarea></td></tr>')
+	return 1
+#	----------------------------------------------------------------------
+def showPricesButton(selected = ''):
+	if (((page.power and page.power.name == 'MASTER')
+	or 'PUBLIC_TOTALS' in page.game.rules)
+	and os.path.isfile(page.game.file('chart'))):
+		page.write('<form name=price method=post>')
+		hideBack('Read')
+		apprise('file', 'chart')
+		page.write("""
+			<tr><td class=bodycopy><b>Bribes:</b></td>
+			<td align=right class=bodycopy><select name=phase class=inputBox
+			onChange=document.price.submit()>
+			""")
+		chart = open(page.game.file('chart'))
+		phases = [x.title().strip() for x in chart if 'MOVEMENT' in x]
+		if not selected: selected = phases[-1]
+		chart.close()
+		[page.write('<option' + ('>', ' selected>')[x == selected] + x)
+			for x in phases]
+		page.write("""
+			</select></td>
+			<td><input class=inputSubmit type=submit value="Read"></td></tr>
+			""")
+		page.write('</form>')
+#	----------------------------------------------------------------------
+def doTransfer():
+	getter = [x for x in page.game.powers if page.beneficiary == x.name][0]
+	page.game.transferCash(page.power, getter, page.amount)
+	if 'ONE_TRANSFER' in page.game.rules:
+		page.power.countTransfer(page.beneficiary)
+	page.game.save()
+#	----------------------------------------------------------------------
+def makeTransfer():
+	try: page.amount, page.balance = int(page.amount), int(page.balance)
+	except: page.amount, page.balance = 0, page.power.balance
+	header = 'Transfer Not Made!'
+	subheader = body = None
+	if page.balance != page.power.balance:
+		subheader, body = 'Your Balance Has Changed!', """
+			Your balance is not the same as it was when you first
+			requested this transfer.  This could be because you
+			have reposted a successful request, or because the
+			moves have just been processed, impoverishing you a bit,
+			or maybe someone has sent you some money.
+			"""
+	elif page.amount > page.balance:
+		subheader, body = 'You Only Wish You Were That Rich!', """
+			It sure would be nice to be able to throw that kind of money
+			around, but it's not a luxury you currently have.
+			"""
+	elif page.amount < 0:
+		subheader, body = 'Nice Try, Though!', """
+			Play With Your Own Money!  Trying to transfer a negative
+			amount is a clever way to steal money.  Unfortunately for
+			you, I'm just as clever.  I thought of it too and made sure
+			you couldn't do it.
+			"""
+	elif page.amount > 0:
+		doTransfer()
+		header, body = 'Transfer Made', """
+			Notice of the transfer has been sent to %s.
+			""" % page.game.anglify(page.beneficiary)
+	else:
+		subheader, body = 'Transferring Zero AgP is Silly!', """
+			How Generous Of You! Does it make you feel good to pretend
+			to give money away? Did you fool yourself?
+			"""
+	finished(header, subheader, body)
+#	----------------------------------------------------------------------
+:>
