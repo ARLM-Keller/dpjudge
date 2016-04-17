@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<:
+page.include('stylesheet')
+page.include('functions')
+page.include('payola')
+import codecs
+open = codecs.open
+loadGame()
+if page.game.phase != 'COMPLETED' and (page.file == 'ledgers'
+or (page.file == 'chart' and 'PUBLIC_TOTALS' not in page.game.rules)):
+	checkPassword()
+showGameHeader()
+:>
+
+<body bgcolor="#ffffff">
+
+<table border=0 cellpadding=0 cellspacing=1 bgcolor="#666666" width=750 align=center>
+<tr valign=top>
+<td colspan=3>
+	<!--BANNER TABLE BEGINS HERE-->
+	<table border=0 cellpadding=0 cellspacing=0 width=100%>
+<:
+gameHeader()
+:>
+	</table>
+	<!--BANNER TABLE ENDS HERE-->
+</td>
+</tr>
+<tr><td colspan=3 height=5><!--SPACER--></td>
+</tr>
+<:
+#	----------------------------------------------------------------------
+def showPrices():
+	if 'phase' not in vars(page): page.phase = page.game.phase
+	show = done = page.phase == 'COMPLETED'
+	page.write(
+		"""
+		<tr valign=top bgcolor="#CCCCCC">
+		<td align=center class="grey"><b>Bribe Chart for %s</b></td>
+		</tr>
+		<tr valign=top>
+		<td>
+		<center><table><tr><td align=center><table>
+		""" % (page.phase, 'Completed Game')[done])
+	showPricesButton(page.phase)
+	page.write('</table></td></tr></table><hr>')
+	page.write('<table><tr><td><pre>')
+	file, show = open(page.game.file(page.file), encoding='latin-1'), 0
+	lines = []
+	for line in file:
+		if not done and 'MOVEMENT' in line:
+			if line.strip().title() == page.phase:
+				show = 1
+			elif show:
+				lines = lines[:-2]
+				break
+		elif show:
+			word = line.split()
+			if not word: lines += ['']
+			elif page.pwdFlag > 3 or done:
+				lines += [line.rstrip()]
+			else:
+				if line[0] != ' ': unit = ' '.join(word[:2])
+				if len(word[0]) == 1 and word[-1][0].isdigit():
+					lines += ['%3s : %s ' %
+						(word[-1], unit) + line[len(unit):35].strip()]
+	file.close()
+	page.write('\n'.join(lines))
+	page.write('</pre></td></tr></table><hr>')
+	page.write('<table><tr><td align=center><table>')
+	showPricesButton(page.phase)
+	page.write('</table><tr><td align=center>')
+	goBack()
+	page.write('</td></tr></table></center>')
+#	----------------------------------------------------------------------
+def showLedger():
+	page.write(
+		"""
+		<tr valign=top bgcolor="#CCCCCC">
+		<td align=center class="grey"><b>Account Ledger</b></td>
+		</tr>
+		<tr valign=top>
+		<td>
+		<center><table><tr><td>
+		""")
+	page.write('<pre>')
+	file = open(page.game.file(page.file), encoding='latin-1')
+	reading = text = page.pwdFlag < 2
+	for line in file:
+		word = line.split()
+		if page.pwdFlag < 2:
+			if word and word[0] == 'ENDPRESS': page.write()
+			else: page.write(line[:-1])
+		elif not reading:
+			header = ' '.join(word[:3])
+			if (header == 'PRESS TO ' + page.power.name
+			or (page.power.abbrev
+			and header == 'PRESS TO ' + page.power.abbrev)
+			or	' '.join(word[:4]) == 'ACCOUNT ACTIVITY FOR ' +
+				page.power.name): reading = text = 1
+		elif 'ENDPRESS' in line:
+			reading = 0
+			page.write()
+		else: page.write(line[:-1])
+	file.close()
+	if not text: page.write('(You Currently Have An Empty Ledger)')
+	page.write('</pre></th></tr></table>')
+	goBack()
+	page.write('</center>')
+#	----------------------------------------------------------------------
+if page.file == 'ledgers': showLedger()
+elif page.file == 'chart': showPrices()
+elif page.file == 'results': showResults()
+elif page.file == 'access': showAccessLog()
+else: viewFile()
+:>
+</td>
+</tr>
+<:
+footer()
+:>

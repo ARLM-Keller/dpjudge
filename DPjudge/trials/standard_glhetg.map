@@ -1,0 +1,97 @@
+USE standard.map
+
+adr     ->  Mar Adriatic                   = adr adriatic
+aeg     ->  Mar Aigaivian                  = aig aigaivian
+alb     ->  Schqiperia                     = sch
+ank     ->  Ancara                         = anc
+apu     ->  Apuglh                         = apu
+arm     ->  Haiastan                       = hai
+bal     ->  Mar Balteasca                  = bal balteasca
+bar     ->  Mar Barents                    = bar barents
+bel     ->  Belxhíc                        = bel belxhic
+ber     ->  Berlin                         = ber
+bla     ->  Mar Nheagra                    = nea neagra
+boh     ->  Ces'chipäts                    = ces
+bre     ->  Cézembre                       = cez céz
+bud     ->  Búddapescht                    = bud búd
+bul/ec  ->  Bülgaria (costa oriental)      = bül/co bül(co) bul/co bul(co)
+bul/sc  ->  Bülgaria (costa sudeasca)      = bül/cs bül(cs) bul/cs bul(cs)
+bul     ->  Bülgaria                       = bül bul
+bur     ->  Burgognh                       = bur
+cly     ->  Claid                          = cla
+con     ->  Cunstantinop                   = cun
+den     ->  Danmarc                        = dan
+eas     ->  Mar Internal del Orient        = mor mio
+edi     ->  Edinbuerg                      = edi
+eng     ->  L'Esliva                       = esl les
+fin     ->  Finphäts                       = fin
+gal     ->  Galiçía                        = gal galicia
+gas     ->  Gaschcugnh                     = gas
+gre     ->  Graicea                        = gra
+lyo     ->  Golf dal Liun                  = gdl liu
+bot     ->  Golf da Boþna                  = gdb bot boþ
+hel     ->  Buc'ht da Hailgapäts           = bdh
+hol     ->  Olança                         = ola
+ion     ->  Mar Ion                        = ion
+iri     ->  Mar Oiresch                    = oir
+kie     ->  Chilonia                       = chi
+lvp     ->  Liverpoula                     = lvp
+lvn     ->  Livognh                        = liv
+lon     ->  Londra                         = lon
+mar     ->  Marseglha                      = mar
+mao     ->  Mar Adlant del Centreu         = mac
+mos     ->  Moscal                         = mos
+mun     ->  Müntsch                        = mün mun
+nap     ->  Nabell                         = nab
+nao     ->  Mar Adlant dal Sentriun        = mas
+naf     ->  Africa                         = afr
+nth     ->  Mar Septentrional              = sep
+nwy     ->  Norvexhà                       = nor
+nwg     ->  Mar Norvexhan                  = mno
+par     ->  Parighi                        = par
+pic     ->  Picardì                        = pic
+pie     ->  Pedmunt                        = ped
+por     ->  Portugal                       = por
+pru     ->  Proiçen                        = pro
+rom     ->  Roma                           = rom
+ruh     ->  Rurpäts                        = rur
+rum     ->  Romania                        = rmn
+ser     ->  Siarvia                        = sia
+sev     ->  Sevástopol                     = sev
+sil     ->  Schlesia                       = sls
+ska     ->  Skágerak                       = ska ská
+smy     ->  Ismir                          = ism
+spa/nc  ->  Espain (costa nordeasca)       = esp/cn esp(cn) espain/cn espain(cn)
+spa/sc  ->  Espain (costa sudeasca)        = esp/cs spa(cs) espain/cs espain(cs)
+spa     ->  Espain                         = esp
+stp/nc  ->  S:t Pairbuerg (costa nordeasca) = stp/cn stp(cn)
+stp/sc  ->  S:t Pairbuerg (costa sudeasca) = stp/cs stp(cs)
+stp     ->  S:t Pairbuerg                  = stp
+swe     ->  Sveiria                        = sve
+syr     ->  Süria                          = sür sur
+tri     ->  Triest                         = tri
+tun     ->  Tünis                          = tün tun
+tus     ->  Rasna                          = ras
+tyr     ->  Tirol                          = tir
+tys     ->  Mar Türan                      = tür tur
+ukr     ->  Ucraína                        = ucr
+ven     ->  Venieça                        = ven
+vie     ->  Viadna                         = via
+wal     ->  Vialsa                         = vls
+war     ->  Varschava                      = var
+wes     ->  Mar Internal del Ovest         = mov
+yor     ->  Evoratzara                     = evo
+swi     ->  Suiça                          = sui
+
+AUSTRIA -> AUSTRIA     (AUSTRIAC)
+ENGLAND -> ANGLATZARA  (ANGLESC:E)
+FRANCE  -> FRANÇA      (FRANÇAL)
+GERMANY -> TZARATÜTSCH (TÜTSCH:G)
+ITALY   -> TALIA       (TALIAN:I)
+RUSSIA  -> RUßIA       (RUßESC)
+TURKEY  -> TÜRCHIA     (TÜRCHESCH)
+
+FLOW		PRIMAVARA:MOVEMENT,RETREATS
+FLOW		OTOGNEU:MOVEMENT,RETREATS
+FLOW		ÞIVEREU:ADJUSTMENTS
+BEGIN		PRIMAVARA 1901 MOVEMENT
